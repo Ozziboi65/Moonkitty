@@ -1,0 +1,15 @@
+{
+	"required": true,
+	"package": "com.moonkitty.Mixin",
+	"compatibilityLevel": "JAVA_21",
+	"client": [
+		"EspMixin",
+		"FreecamMixin",
+		"WorldchangerMixin",
+		"BlockPlayerMoveMixin",
+		"DisableLocalPredictFreecamMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

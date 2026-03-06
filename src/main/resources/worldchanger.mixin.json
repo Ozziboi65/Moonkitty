@@ -1,0 +1,14 @@
+{
+	"required": true,
+	"package": "com.moonkitty.Mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [
+		"WorldchangerMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}
