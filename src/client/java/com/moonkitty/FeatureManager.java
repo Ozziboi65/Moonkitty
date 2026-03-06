@@ -13,6 +13,7 @@ import com.moonkitty.Features.companion;
 import com.moonkitty.Features.blink;
 import com.moonkitty.Features.triggerbot;
 import com.moonkitty.Features.ChestEsp;
+import com.moonkitty.Features.BoatFly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ public class FeatureManager {
     private final blink blinkFeature;
     private final triggerbot triggerbotFeature;
     private final ChestEsp chestespFeature;
+    private final BoatFly boatflyFeature;
     MinecraftClient client;
 
     // singleton optional:
@@ -44,6 +46,7 @@ public class FeatureManager {
         this.blinkFeature = new blink();
         this.triggerbotFeature = new triggerbot();
         this.chestespFeature = new ChestEsp();
+        this.boatflyFeature = new BoatFly();
 
         featureList.add(espFeature);
         featureList.add(freecamFeature);
@@ -54,6 +57,7 @@ public class FeatureManager {
         featureList.add(blinkFeature);
         featureList.add(triggerbotFeature);
         featureList.add(chestespFeature);
+        featureList.add(boatflyFeature);
     }
 
     public esp getEspFeature() {
@@ -90,6 +94,10 @@ public class FeatureManager {
 
     public triggerbot getTriggerbotFeature() {
         return triggerbotFeature;
+    }
+
+    public BoatFly getBoatFlyFeature() {
+        return boatflyFeature;
     }
 
     public void registerFeature(Feature feature) {
