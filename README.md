@@ -21,9 +21,20 @@ Most Minimal Minecraft Cheat Client
   
   Blink
 
+
+# ScreenShots:
+  ![Screenshot 1](1.png)
+  
+  screenshot with companion ON
+  
+  ![Screenshot 2](2.png)
+  
+  screenshot of chestEsp
+
+
 # Notes:
 
-press Insert to toggle menu
+press Insert to toggle menu (can be changed in Minecraft settings)
 
 the default gif can be changed at:
 
