@@ -34,6 +34,8 @@ Most Minimal Minecraft Cheat Client
 
 # Notes:
 
+for issues with building from source with the remapping refer to the Fabric Docs 
+
 press Insert to toggle menu (can be changed in Minecraft settings)
 
 the default gif can be changed at:
