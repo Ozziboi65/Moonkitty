@@ -31,6 +31,11 @@ Most Minimal Minecraft Cheat Client
   
   screenshot of chestEsp
 
+  ![Screenshot 3](3.png)
+  
+  screenshot of boatFly
+  
+
 
 # Notes:
 
