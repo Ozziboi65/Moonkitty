@@ -21,6 +21,8 @@ Most Minimal Minecraft Cheat Client
   
   Blink
 
+  Boat-Fly
+
 
 # ScreenShots:
   ![Screenshot 1](1.png)
