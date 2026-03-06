@@ -20,3 +20,13 @@ Most Minimal Minecraft Cheat Client
   Freecam / DebugCam
   
   Blink
+
+# Notes:
+
+press Insert to toggle menu
+
+the default gif can be changed at:
+
+*Your MC Folder*/moonkitty/1.gif
+
+also make sure your Gif is not optmized
