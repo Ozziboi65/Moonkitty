@@ -35,8 +35,11 @@ import net.minecraft.client.gui.widget.ScrollableWidget;
 import net.minecraft.text.Text;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.block.EnderChestBlock;
+import net.minecraft.block.entity.BarrelBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.ChestBlockEntity;
+import net.minecraft.block.entity.EnderChestBlockEntity;
 import net.minecraft.world.chunk.WorldChunk;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3i;
@@ -55,11 +58,16 @@ public class ChestEsp extends Feature {
     private World world;
 
     private boolean renderChest = true;
-    private boolean showItem;
+    private boolean renderEnderChest = true;
+    private boolean renderBarrel = true;
 
     public int chestColor = 0xFFFFDD54;
+    public int enderChestColor = 0xFF00FFFF;
+    public int barrelColor = 0xFF00FF00;
 
     public List<ChestBlockEntity> chestList = new ArrayList<>();
+    public List<EnderChestBlockEntity> enderChestList = new ArrayList<>();
+    public List<BarrelBlockEntity> barrelList = new ArrayList<>();
 
     public ChestEsp() {
         this.name = "CHESTESP";
@@ -81,6 +89,34 @@ public class ChestEsp extends Feature {
         setRenderChest(!this.renderChest);
     }
 
+    public boolean getRenderEnderChest() {
+        return renderEnderChest;
+    }
+
+    public void setRenderEnderChest(boolean enabled) {
+        if (this.renderEnderChest == enabled)
+            return;
+        this.renderEnderChest = enabled;
+    }
+
+    public void toggleRenderEnderChest() {
+        setRenderEnderChest(!this.renderEnderChest);
+    }
+
+    public boolean getRenderBarrel() {
+        return renderBarrel;
+    }
+
+    public void setRenderBarrel(boolean enabled) {
+        if (this.renderBarrel == enabled)
+            return;
+        this.renderBarrel = enabled;
+    }
+
+    public void toggleRenderBarrel() {
+        setRenderBarrel(!this.renderBarrel);
+    }
+
     public void setChestColor(int color) {
         this.chestColor = color;
     }
@@ -98,6 +134,17 @@ public class ChestEsp extends Feature {
                 if (renderChest)
                     GizmoDrawing.box(chest.getPos(), DrawStyle.stroked(chestColor)).ignoreOcclusion();
             }
+
+            for (EnderChestBlockEntity chest : enderChestList) {
+                if (renderEnderChest)
+                    GizmoDrawing.box(chest.getPos(), DrawStyle.stroked(enderChestColor)).ignoreOcclusion();
+            }
+
+            for (BarrelBlockEntity chest : barrelList) {
+                if (renderBarrel)
+                    GizmoDrawing.box(chest.getPos(), DrawStyle.stroked(barrelColor)).ignoreOcclusion();
+            }
+
         });
 
         menuObject.registerNewFeatureButton(
@@ -115,6 +162,8 @@ public class ChestEsp extends Feature {
             return;
 
         chestList.clear();
+        enderChestList.clear();
+        barrelList.clear();
 
         int renderDist = client.options.getClampedViewDistance();
         ChunkPos center = client.player.getChunkPos();
@@ -131,6 +180,22 @@ public class ChestEsp extends Feature {
                     if (be instanceof ChestBlockEntity chest) {
 
                         chestList.add(chest);
+
+                    }
+                }
+
+                for (BlockEntity be : chunk.getBlockEntities().values()) {
+                    if (be instanceof EnderChestBlockEntity chest) {
+
+                        enderChestList.add(chest);
+
+                    }
+                }
+
+                for (BlockEntity be : chunk.getBlockEntities().values()) {
+                    if (be instanceof BarrelBlockEntity chest) {
+
+                        barrelList.add(chest);
 
                     }
                 }

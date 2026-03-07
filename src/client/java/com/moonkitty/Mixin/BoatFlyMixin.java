@@ -86,7 +86,7 @@ public abstract class BoatFlyMixin {
                         new Vec3d(newX, newY, newZ),
                         client.player.getYaw(),
                         client.player.getPitch(),
-                        false));
+                        true));
 
         ci.cancel();
     }

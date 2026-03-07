@@ -41,7 +41,7 @@ public class BoatFlyMenu extends Screen {
 
         BoatFly boatFeature = FeatureManager.INSTANCE.getBoatFlyFeature();
 
-        final double maxSpeed = 3.0;
+        final double maxSpeed = 7.0;
         SliderWidget speedSlider = new SliderWidget(centerX - 100, centerY - 10, 200, 20, Text.literal("Speed: "),
                 boatFeature.getSpeed() / maxSpeed) {
 
@@ -66,7 +66,7 @@ public class BoatFlyMenu extends Screen {
 
         this.addDrawableChild(speedSlider);
 
-        final double maxFall = 1.0;
+        final double maxFall = 6.7;
         SliderWidget fallSlider = new SliderWidget(centerX - 100, centerY + 25, 200, 20, Text.literal("Descent: "),
                 boatFeature.getFallSpeed() / maxFall) {
 

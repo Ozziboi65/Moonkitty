@@ -120,6 +120,22 @@ public class ChestEspMenu extends Screen {
                             this.init();
                         }).dimensions(centerX - 100, centerY + 30, 200, 20).build());
 
+        this.addDrawableChild(
+                ButtonWidget.builder(
+                        Text.literal("Show Ender Chests: " + (Espfeature.getRenderEnderChest() ? "ON" : "OFF")),
+                        button -> {
+                            Espfeature.toggleRenderEnderChest();
+                            this.init();
+                        }).dimensions(centerX - 100, centerY + 60, 200, 20).build());
+
+        this.addDrawableChild(
+                ButtonWidget.builder(
+                        Text.literal("Show Barrels: " + (Espfeature.getRenderBarrel() ? "ON" : "OFF")),
+                        button -> {
+                            Espfeature.toggleRenderBarrel();
+                            this.init();
+                        }).dimensions(centerX - 100, centerY + 90, 200, 20).build());
+
         this.addDrawableChild(colorRSlider);
         this.addDrawableChild(colorGSlider);
         this.addDrawableChild(colorBSlider);
