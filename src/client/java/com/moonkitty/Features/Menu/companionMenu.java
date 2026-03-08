@@ -60,7 +60,7 @@ public class companionMenu extends Screen {
         if (initialNorm > 1.0)
             initialNorm = 1.0;
 
-        double initialNormSpeed = (feature.getSpeed() - MIN_X) / (double) (MAX_SPEED - MIN_SPEED);
+        double initialNormSpeed = (feature.getSpeed() - MIN_SPEED) / (double) (MAX_SPEED - MIN_SPEED);
         if (initialNormSpeed < 0.0)
             initialNormSpeed = 0.0;
         if (initialNormSpeed > 1.0)
@@ -142,8 +142,11 @@ public class companionMenu extends Screen {
         });
 
         this.addDrawableChild(XcordSlider);
+        XcordSlider.setMessage(Text.literal("X: " + feature.getX()));
         this.addDrawableChild(YcordSlider);
+        YcordSlider.setMessage(Text.literal("Y: " + feature.getY()));
         this.addDrawableChild(SpeedSlider);
+        SpeedSlider.setMessage(Text.literal("Ticks Per Frame: " + feature.getSpeed()));
         this.addDrawableChild(GifName);
         this.setFocused(GifName);
     }

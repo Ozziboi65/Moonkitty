@@ -63,5 +63,6 @@ public class freecamMenu extends Screen {
                         }).dimensions(centerX - 100, centerY - 60, 200, 20).build());
 
         this.addDrawableChild(speedSlider);
+        speedSlider.setMessage(Text.literal(String.format("Speed: %.2f", feature.GetSpeed())));
     }
 }

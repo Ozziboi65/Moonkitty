@@ -62,5 +62,6 @@ public class worldchangerMenu extends Screen {
                         }).dimensions(centerX - 100, centerY - 90, 200, 20).build());
 
         this.addDrawableChild(timeSlider);
+        timeSlider.setMessage(Text.literal(String.format("Time: %d", feature.getTime())));
     }
 }

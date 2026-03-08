@@ -62,6 +62,8 @@ public class BlinkMenu extends Screen {
             }
         };
 
+        PulseSlider.setMessage(Text.literal("Pulse(In Ticks): " + feature.getPulse()));
+
         this.addDrawableChild(
                 new TextWidget(
                         centerX - 150,
