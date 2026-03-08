@@ -14,6 +14,7 @@ import com.moonkitty.Features.blink;
 import com.moonkitty.Features.triggerbot;
 import com.moonkitty.Features.ChestEsp;
 import com.moonkitty.Features.BoatFly;
+import com.moonkitty.Features.AutoTotem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ public class FeatureManager {
     private final triggerbot triggerbotFeature;
     private final ChestEsp chestespFeature;
     private final BoatFly boatflyFeature;
+    private final AutoTotem autototemFeature;
     MinecraftClient client;
 
     // singleton optional:
@@ -47,6 +49,7 @@ public class FeatureManager {
         this.triggerbotFeature = new triggerbot();
         this.chestespFeature = new ChestEsp();
         this.boatflyFeature = new BoatFly();
+        this.autototemFeature = new AutoTotem();
 
         featureList.add(espFeature);
         featureList.add(freecamFeature);
@@ -58,6 +61,7 @@ public class FeatureManager {
         featureList.add(triggerbotFeature);
         featureList.add(chestespFeature);
         featureList.add(boatflyFeature);
+        featureList.add(autototemFeature);
     }
 
     public esp getEspFeature() {
@@ -98,6 +102,10 @@ public class FeatureManager {
 
     public BoatFly getBoatFlyFeature() {
         return boatflyFeature;
+    }
+
+    public AutoTotem getAutoTotemFeature() {
+        return autototemFeature;
     }
 
     public void registerFeature(Feature feature) {

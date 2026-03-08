@@ -49,7 +49,7 @@ public class triggerbot extends Feature {
     public triggerbot() {
         this.name = "TRIGGERBOT";
         this.feature_id = 45;
-        this.setEnabled(true);
+        this.setEnabled(false);
     }
 
     public void setEnabledSimClick(boolean enabled) {
