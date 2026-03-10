@@ -30,6 +30,10 @@ import net.minecraft.network.packet.*;
 @Mixin(ClientPlayerEntity.class)
 public abstract class BoatFlyMixin {
 
+    private int antiKickTimer = 0;
+    private double lastY = 0.0;
+    private boolean doCorrection = false;
+
     @Inject(method = "tickMovement", at = @At("HEAD"), cancellable = true)
     private void onSendMovementPackets(CallbackInfo ci) {
         MinecraftClient client = MinecraftClient.getInstance();
@@ -61,7 +65,6 @@ public abstract class BoatFlyMixin {
             targetY = vehicle.getY();
         }
 
-        // adjust targetY from input; when no vertical input is pressed, slowly descend
         if (client.options.jumpKey.isPressed()) {
             targetY += 0.5;
         } else if (client.options.sneakKey.isPressed()) {
@@ -78,12 +81,25 @@ public abstract class BoatFlyMixin {
         boat_feature.setTargetY(targetY);
 
         double newY = targetY;
+        double packetY = newY;
+
+        antiKickTimer++;
+        if (antiKickTimer >= 40) {
+            packetY = lastY - 0.03130;
+            doCorrection = true;
+            antiKickTimer = 0;
+        } else if (doCorrection) {
+            packetY = lastY;
+            doCorrection = false;
+        }
+
+        lastY = newY;
 
         vehicle.setPosition(newX, newY, newZ);
 
         client.getNetworkHandler().sendPacket(
                 new VehicleMoveC2SPacket(
-                        new Vec3d(newX, newY, newZ),
+                        new Vec3d(newX, packetY, newZ),
                         client.player.getYaw(),
                         client.player.getPitch(),
                         true));

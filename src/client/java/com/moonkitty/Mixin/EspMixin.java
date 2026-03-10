@@ -23,7 +23,7 @@ public class EspMixin {
 
     private void isGlowing(CallbackInfoReturnable<Boolean> cir) {
 
-        if (esp_feature.isEnabled() == true) {
+        if (esp_feature.isEnabled() && esp_feature.getOutline()) {
             MinecraftClient client = MinecraftClient.getInstance();
 
             boolean isPlayer = (Object) this instanceof PlayerEntity;

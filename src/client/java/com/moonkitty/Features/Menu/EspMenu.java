@@ -99,7 +99,7 @@ public class EspMenu extends Screen {
                         centerX - 150,
                         centerY - 120,
                         325, 20,
-                        Text.literal("Draws an outline around chosen Entities"),
+                        Text.literal("Draws an outline/box around chosen Entities"),
                         this.textRenderer));
 
         this.addDrawableChild(
@@ -109,6 +109,22 @@ public class EspMenu extends Screen {
                             Espfeature.toggle();
                             this.init();
                         }).dimensions(centerX - 100, centerY - 90, 200, 20).build());
+
+        this.addDrawableChild(
+                ButtonWidget.builder(
+                        Text.literal("Draw Outline: " + (Espfeature.getOutline() ? "ON" : "OFF")),
+                        button -> {
+                            Espfeature.toggleOutline();
+                            this.init();
+                        }).dimensions(centerX - 100, centerY + 120, 200, 20).build());
+
+        this.addDrawableChild(
+                ButtonWidget.builder(
+                        Text.literal("Draw Box: " + (Espfeature.getBox() ? "ON" : "OFF")),
+                        button -> {
+                            Espfeature.toggleBox();
+                            this.init();
+                        }).dimensions(centerX - 100, centerY + 90, 200, 20).build());
 
         this.addDrawableChild(
                 ButtonWidget.builder(

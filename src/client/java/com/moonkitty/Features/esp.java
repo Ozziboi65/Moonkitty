@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import com.moonkitty.Gui.Menu;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.Vec3d;
 
 import com.moonkitty.Feature;
 import com.moonkitty.FeatureManager;
@@ -26,12 +27,25 @@ import com.moonkitty.Features.Menu.TriggerBotMenu;
 
 import com.moonkitty.Features.Menu.EspMenu;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.Window;
 
 import net.minecraft.client.gui.widget.SliderWidget;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.render.DrawStyle;
 import net.minecraft.client.gui.widget.ScrollableWidget;
+
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.debug.gizmo.GizmoDrawing;
+
+import net.minecraft.world.debug.gizmo.GizmoDrawing;
 
 public class esp extends Feature {
     public static final Logger LOGGER = LoggerFactory.getLogger("moonkitty");
@@ -43,11 +57,15 @@ public class esp extends Feature {
     private boolean showHostile;
     private boolean showItem;
 
-    public int color_player = 0xff00ff;
+    public int color_player = 0xFFFF00FF;
 
-    public int color_hostile = 0xffffff;
+    public int color_hostile = 0xFFFFFFFF;
 
-    public int color_item = 0xfbff00;
+    public int color_item = 0xFFFBFF00;
+
+    public boolean renderBox = true;
+
+    public boolean outline;
 
     public esp() {
         this.name = "ESP";
@@ -59,14 +77,23 @@ public class esp extends Feature {
         return showHostile;
     }
 
+    public boolean getOutline() {
+        return outline;
+    }
+
     public boolean getItem() {
         return showItem;
+    }
+
+    public boolean getBox() {
+        return renderBox;
     }
 
     @Override
     public void init() {
         this.McClient = MinecraftClient.getInstance();
         Menu menuObject = Menu.INSTANCE;
+        Vec3d playerPos;
 
         menuObject.registerNewFeatureButton(
                 ButtonWidget.builder(
@@ -74,6 +101,24 @@ public class esp extends Feature {
                         btn -> {
                             MinecraftClient.getInstance().setScreen(new EspMenu(Menu.INSTANCE));
                         }).dimensions(100, Menu.INSTANCE.getNextY(), 200, 20).build());
+
+        WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> {
+            if (!isEnabled() || McClient.player == null || McClient.world == null)
+                return;
+
+            if (!getBox())
+                return;
+
+            for (AbstractClientPlayerEntity player : McClient.world.getPlayers()) {
+                if (player == McClient.player)
+                    continue;
+
+                if (renderBox) {
+                    GizmoDrawing.box(player.getBoundingBox(), DrawStyle.stroked(color_player, 5)).ignoreOcclusion();
+                }
+            }
+        });
+
     }
 
     public void setItem(boolean enabled) {
@@ -90,6 +135,26 @@ public class esp extends Feature {
 
     public void toggleHostile() {
         setHostile(!this.showHostile);
+    }
+
+    public void setBox(boolean enabled) {
+        if (this.renderBox == enabled)
+            return;
+        this.renderBox = enabled;
+    }
+
+    public void toggleBox() {
+        setBox(!this.renderBox);
+    }
+
+    public void setOutline(boolean enabled) {
+        if (this.outline == enabled)
+            return;
+        this.outline = enabled;
+    }
+
+    public void toggleOutline() {
+        setOutline(!this.outline);
     }
 
     public void toggleItem() {
