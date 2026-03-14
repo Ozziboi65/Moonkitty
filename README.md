@@ -8,7 +8,7 @@ Most Minimal Minecraft Cheat Client
 # Current Features:
   Esp (player, items and hostile mobs) 
   
-  ChestEsp
+  Container Esp
   
   WorldChanger
   
@@ -24,6 +24,16 @@ Most Minimal Minecraft Cheat Client
 
   Boat-Fly
 
+  AutoTotem
+
+  KillAura
+
+  Search
+
+  Particle Aura
+
+  HackList
+  
 
 # ScreenShots:
   ![Screenshot 1](1.png)
