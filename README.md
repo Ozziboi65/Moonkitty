@@ -40,15 +40,17 @@ Most Minimal Minecraft Cheat Client
   
   screenshot with companion ON
   
-  ![Screenshot 2](2.png)
+  ![Screenshot 2](4.png)
   
-  screenshot of chestEsp
+  screenshot of KillAura being used
 
-  ![Screenshot 3](3.png)
+  ![Screenshot 3](5.png)
   
   screenshot of boatFly
   
-
+  ![Screenshot 3](6.png)
+  
+  screenshot of Freecam
 
 # Notes:
 
