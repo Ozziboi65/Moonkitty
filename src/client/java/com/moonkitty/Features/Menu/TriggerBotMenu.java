@@ -74,5 +74,6 @@ public class TriggerBotMenu extends Screen {
                         }).dimensions(centerX - 100, centerY - 30, 200, 20).build());
 
         this.addDrawableChild(delaySlider);
+        delaySlider.setMessage(Text.literal("Delay(ms): " + feature.getAttackDelayMs()));
     }
 }

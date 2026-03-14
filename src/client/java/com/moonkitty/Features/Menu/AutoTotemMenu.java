@@ -67,5 +67,6 @@ public class AutoTotemMenu extends Screen {
                         }).dimensions(centerX - 100, centerY - 90, 200, 20).build());
 
         this.addDrawableChild(delaySlider);
+        delaySlider.setMessage(Text.literal("Delay(ms): " + feature.getDelay()));
     }
 }

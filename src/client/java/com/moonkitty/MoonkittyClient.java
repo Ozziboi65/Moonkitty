@@ -4,12 +4,15 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 
+import java.io.IOException;
+
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.moonkitty.Gui.Gui;
+import com.moonkitty.Gui.HackList;
 import com.moonkitty.Gui.Menu;
+import com.moonkitty.Util.ConfigUtil;
 import com.moonkitty.Util.FileIO;
 
 import com.moonkitty.Features.esp;
@@ -64,6 +67,10 @@ public class MoonkittyClient implements ClientModInitializer {
                 FeatureManager.INSTANCE.Init();
 
                 FileIO.ExtractFromJar("assets/moonkitty/gif/1.gif", "moonkitty/1.gif");
+
+                ConfigUtil.init();
+
+                HackList.init();
 
                 ClientTickEvents.END_CLIENT_TICK.register(client -> {
 

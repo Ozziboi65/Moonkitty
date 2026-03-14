@@ -21,7 +21,7 @@ public class worldchanger extends Feature {
     private World world;
 
     public worldchanger() {
-        this.name = "WORLDCHANGER";
+        this.name = "WorldChanger";
         this.feature_id = 5;
         this.setEnabled(true);
     }

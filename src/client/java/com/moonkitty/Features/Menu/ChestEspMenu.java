@@ -13,6 +13,7 @@ import net.minecraft.client.gui.widget.TextWidget;
 import com.moonkitty.Feature;
 import com.moonkitty.FeatureManager;
 import com.moonkitty.Features.ChestEsp;
+import com.moonkitty.Gui.ColorPicker;
 
 public class ChestEspMenu extends Screen {
     private final Screen parent;
@@ -41,60 +42,35 @@ public class ChestEspMenu extends Screen {
 
         ChestEsp Espfeature = FeatureManager.INSTANCE.getChestEspFeature();
 
-        int color = Espfeature.chestColor;
-        this.playerRed = (color >> 16) & 0xFF;
-        this.playerGreen = (color >> 8) & 0xFF;
-        this.playerBlue = color & 0xFF;
-        SliderWidget colorRSlider = new SliderWidget(centerX - 100, centerY - 60, 200, 20,
-                Text.literal("Normal Chest Red: "),
-                this.playerRed / 255.0) {
+        this.addDrawableChild(
+                ButtonWidget.builder(
+                        Text.literal("Normal Chest Color"),
+                        btn -> {
+                            int current = Espfeature.chestColor;
+                            client.setScreen(new ColorPicker(this, current, c -> {
+                                Espfeature.setChestColor(c);
+                            }));
+                        }).dimensions(centerX - 100, centerY - 60, 200, 20).build());
 
-            @Override
-            protected void updateMessage() {
-                this.setMessage(Text.literal("Normal Chest Red: " + (int) (this.value * 255)));
-            }
+        this.addDrawableChild(
+                ButtonWidget.builder(
+                        Text.literal("Ender Chest Color"),
+                        btn -> {
+                            int current = Espfeature.enderChestColor;
+                            client.setScreen(new ColorPicker(this, current, c -> {
+                                Espfeature.enderChestColor = c;
+                            }));
+                        }).dimensions(centerX - 100, centerY - 30, 200, 20).build());
 
-            @Override
-            protected void applyValue() {
-                playerRed = (int) (this.value * 255);
-                int colorRGB = toArgb(playerRed, playerGreen, playerBlue);
-                Espfeature.setChestColor(colorRGB);
-            }
-        };
-
-        SliderWidget colorGSlider = new SliderWidget(centerX - 100, centerY - 30, 200, 20,
-                Text.literal("Normal Chest Green: "),
-                this.playerGreen / 255.0) {
-
-            @Override
-            protected void updateMessage() {
-                this.setMessage(Text.literal("Normal Chest Green: " + (int) (this.value * 255)));
-            }
-
-            @Override
-            protected void applyValue() {
-                playerGreen = (int) (this.value * 255);
-                int colorRGB = toArgb(playerRed, playerGreen, playerBlue);
-                Espfeature.setChestColor(colorRGB);
-            }
-        };
-
-        SliderWidget colorBSlider = new SliderWidget(centerX - 100, centerY + 0, 200, 20,
-                Text.literal("Normal Chest Blue: "),
-                this.playerBlue / 255.0) {
-
-            @Override
-            protected void updateMessage() {
-                this.setMessage(Text.literal("Normal Chest Blue: " + (int) (this.value * 255)));
-            }
-
-            @Override
-            protected void applyValue() {
-                playerBlue = (int) (this.value * 255);
-                int colorRGB = toArgb(playerRed, playerGreen, playerBlue);
-                Espfeature.setChestColor(colorRGB);
-            }
-        };
+        this.addDrawableChild(
+                ButtonWidget.builder(
+                        Text.literal("Barrel Color"),
+                        btn -> {
+                            int current = Espfeature.barrelColor;
+                            client.setScreen(new ColorPicker(this, current, c -> {
+                                Espfeature.barrelColor = c;
+                            }));
+                        }).dimensions(centerX - 100, centerY, 200, 20).build());
 
         this.addDrawableChild(
                 new TextWidget(
@@ -135,10 +111,6 @@ public class ChestEspMenu extends Screen {
                             Espfeature.toggleRenderBarrel();
                             this.init();
                         }).dimensions(centerX - 100, centerY + 90, 200, 20).build());
-
-        this.addDrawableChild(colorRSlider);
-        this.addDrawableChild(colorGSlider);
-        this.addDrawableChild(colorBSlider);
 
     }
 }

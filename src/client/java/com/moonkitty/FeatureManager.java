@@ -15,6 +15,9 @@ import com.moonkitty.Features.triggerbot;
 import com.moonkitty.Features.ChestEsp;
 import com.moonkitty.Features.BoatFly;
 import com.moonkitty.Features.AutoTotem;
+import com.moonkitty.Features.Visuals.PlayerAura;
+import com.moonkitty.Features.Combat.KillAura;
+import com.moonkitty.Features.Search;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +34,11 @@ public class FeatureManager {
     private final ChestEsp chestespFeature;
     private final BoatFly boatflyFeature;
     private final AutoTotem autototemFeature;
+    private final PlayerAura playerAuraFeature;
+    private final KillAura killAuraFeature;
+    private final Search searchFeature;
     MinecraftClient client;
 
-    // singleton optional:
     public static final FeatureManager INSTANCE = new FeatureManager();
 
     public List<Feature> featureList = new ArrayList<>();
@@ -50,6 +55,9 @@ public class FeatureManager {
         this.chestespFeature = new ChestEsp();
         this.boatflyFeature = new BoatFly();
         this.autototemFeature = new AutoTotem();
+        this.playerAuraFeature = new PlayerAura();
+        this.killAuraFeature = new KillAura();
+        this.searchFeature = new Search();
 
         featureList.add(espFeature);
         featureList.add(freecamFeature);
@@ -62,6 +70,9 @@ public class FeatureManager {
         featureList.add(chestespFeature);
         featureList.add(boatflyFeature);
         featureList.add(autototemFeature);
+        featureList.add(playerAuraFeature);
+        featureList.add(killAuraFeature);
+        featureList.add(searchFeature);
     }
 
     public esp getEspFeature() {
@@ -74,6 +85,10 @@ public class FeatureManager {
 
     public Tracer getTracerFeature() {
         return tracerFeature;
+    }
+
+    public PlayerAura getPlayerAura() {
+        return playerAuraFeature;
     }
 
     public companion getCompanionFeature() {
@@ -102,6 +117,14 @@ public class FeatureManager {
 
     public BoatFly getBoatFlyFeature() {
         return boatflyFeature;
+    }
+
+    public KillAura getKillAuraFeature() {
+        return killAuraFeature;
+    }
+
+    public Search getSearchFeature() {
+        return searchFeature;
     }
 
     public AutoTotem getAutoTotemFeature() {

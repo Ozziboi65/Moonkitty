@@ -41,7 +41,7 @@ public class AutoTotem extends Feature {
     int delay = 200;
 
     public AutoTotem() {
-        this.name = "AUTOTOTEM";
+        this.name = "AutoTotem";
         this.feature_id = 4567;
         this.setEnabled(true);
     }

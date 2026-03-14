@@ -7,7 +7,6 @@ import com.moonkitty.Feature;
 import com.moonkitty.Gui.Menu;
 import com.moonkitty.Features.Menu.tracerMenu;
 
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -20,10 +19,11 @@ public class Tracer extends Feature {
     public static final Logger LOGGER = LoggerFactory.getLogger("moonkitty");
 
     public boolean renderPlayer = true;
-    private float tickDelta = 1.0f;
+
+    public int playerColor = 0xFFFF0000;
 
     public Tracer() {
-        this.name = "TRACERS";
+        this.name = "Tracer";
         this.feature_id = 85;
         this.setEnabled(true);
     }
@@ -38,20 +38,20 @@ public class Tracer extends Feature {
                         btn -> client.setScreen(new tracerMenu(Menu.INSTANCE)))
                         .dimensions(100, Menu.INSTANCE.getNextY(), 200, 20).build());
 
-        HudRenderCallback.EVENT
-                .register((drawContext, counter) -> tickDelta = counter.getTickProgress(true));
-
         WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> {
             if (!isEnabled() || client.player == null || client.world == null)
                 return;
 
-            Vec3d origin = client.player.getLerpedPos(tickDelta);
+            float frameTickDelta = client.gameRenderer.getCamera().getLastTickProgress();
+
+            Vec3d origin = client.player.getLerpedPos(frameTickDelta);
+            origin.add(0, 0.9, 0);
 
             for (AbstractClientPlayerEntity player : client.world.getPlayers()) {
                 if (player == client.player)
                     continue;
                 if (renderPlayer)
-                    GizmoDrawing.line(origin, player.getLerpedPos(tickDelta), 0xFFFF0000);
+                    GizmoDrawing.line(origin, player.getLerpedPos(frameTickDelta), playerColor).ignoreOcclusion();
             }
         });
     }

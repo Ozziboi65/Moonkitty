@@ -65,6 +65,7 @@ public class BoatFlyMenu extends Screen {
                         }).dimensions(centerX - 100, centerY - 90, 200, 20).build());
 
         this.addDrawableChild(speedSlider);
+        speedSlider.setMessage(Text.literal("Speed: " + String.format("%.2f", boatFeature.getSpeed())));
 
         final double maxFall = 6.7;
         SliderWidget fallSlider = new SliderWidget(centerX - 100, centerY + 25, 200, 20, Text.literal("Descent: "),
@@ -82,6 +83,7 @@ public class BoatFlyMenu extends Screen {
         };
 
         this.addDrawableChild(fallSlider);
+        fallSlider.setMessage(Text.literal("Descent: " + String.format("%.3f b/s", boatFeature.getFallSpeed())));
 
     }
 }

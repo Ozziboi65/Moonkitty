@@ -70,7 +70,7 @@ public class ChestEsp extends Feature {
     public List<BarrelBlockEntity> barrelList = new ArrayList<>();
 
     public ChestEsp() {
-        this.name = "CHESTESP";
+        this.name = "container esp";
         this.feature_id = 58;
         this.setEnabled(true);
     }

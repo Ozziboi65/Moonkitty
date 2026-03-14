@@ -30,7 +30,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.Window;
-
+import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.DrawStyle;
@@ -45,7 +45,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.debug.gizmo.GizmoDrawing;
 
-import net.minecraft.world.debug.gizmo.GizmoDrawing;
+import net.minecraft.entity.Entity;
 
 public class esp extends Feature {
     public static final Logger LOGGER = LoggerFactory.getLogger("moonkitty");
@@ -114,9 +114,21 @@ public class esp extends Feature {
                     continue;
 
                 if (renderBox) {
-                    GizmoDrawing.box(player.getBoundingBox(), DrawStyle.stroked(color_player, 5)).ignoreOcclusion();
+                    GizmoDrawing.box(player.getBoundingBox(), DrawStyle.stroked(color_player, 2)).ignoreOcclusion();
                 }
             }
+
+            for (Entity entity : McClient.world.getEntities())
+
+                if (entity instanceof HostileEntity) {
+
+                    if (renderBox) {
+                        GizmoDrawing.box(entity.getBoundingBox(), DrawStyle.stroked(color_hostile, 2))
+                                .ignoreOcclusion();
+                    }
+
+                }
+
         });
 
     }

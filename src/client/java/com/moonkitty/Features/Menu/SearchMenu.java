@@ -8,17 +8,19 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.client.gui.widget.SliderWidget;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+
 import com.moonkitty.Feature;
 import com.moonkitty.FeatureManager;
 import com.moonkitty.Features.esp;
 import com.moonkitty.Gui.ColorPicker;
-import com.moonkitty.Features.Tracer;
+import com.moonkitty.Features.Search;
 
-public class tracerMenu extends Screen {
+public class SearchMenu extends Screen {
     private final Screen parent;
 
-    public tracerMenu(Screen parent) {
-        super(Text.literal("MoonKitty Tracer Menu"));
+    public SearchMenu(Screen parent) {
+        super(Text.literal("MoonKitty search Menu"));
         this.parent = parent;
     }
 
@@ -31,17 +33,25 @@ public class tracerMenu extends Screen {
         int centerX = this.width / 2;
         int centerY = this.height / 2;
 
-        Tracer feature = FeatureManager.INSTANCE.getTracerFeature();
+        Search feature = FeatureManager.INSTANCE.getSearchFeature();
 
         this.addDrawableChild(
                 ButtonWidget.builder(
-                        Text.literal("Player Color"),
+                        Text.literal("Color"),
                         btn -> {
-                            int current = feature.playerColor;
+                            int current = feature.color;
                             client.setScreen(new ColorPicker(this, current, c -> {
-                                feature.playerColor = c;
+                                feature.color = c;
                             }));
                         }).dimensions(centerX - 100, centerY - 60, 200, 20).build());
+
+        TextFieldWidget identifier = new TextFieldWidget(
+                this.textRenderer,
+                centerX - 100,
+                centerY - 30,
+                200,
+                20,
+                Text.literal("Identifier Of The Block"));
 
         this.addDrawableChild(
                 ButtonWidget.builder(
@@ -50,5 +60,13 @@ public class tracerMenu extends Screen {
                             feature.toggle();
                             this.init();
                         }).dimensions(centerX - 100, centerY - 90, 200, 20).build());
+
+        this.addDrawableChild(identifier);
+        this.setFocused(identifier);
+
+        identifier.setChangedListener(value -> {
+            feature.setTargetFromString(value);
+        });
+
     }
 }
