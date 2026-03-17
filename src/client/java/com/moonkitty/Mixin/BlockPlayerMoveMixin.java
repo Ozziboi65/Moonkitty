@@ -21,17 +21,9 @@ public abstract class BlockPlayerMoveMixin {
     @Inject(method = "sendPacket", at = @At("HEAD"), cancellable = true)
     private void onSendPacket(Packet<?> packet, CallbackInfo ci) {
 
-        if (FeatureManager.INSTANCE.getBlinkFeature().isEnabled()
+        if (FeatureManager.INSTANCE.getBlinkFeature().shouldCancelPacket
                 && packet instanceof PlayerMoveC2SPacket) {
-            MinecraftClient client = MinecraftClient.getInstance();
-            ClientPlayNetworkHandler handler = client.getNetworkHandler();
-
-            if (handler != null) {
-                blink.buffer.add((PlayerMoveC2SPacket) packet);
-                ci.cancel();
-                return;
-            }
-
+            ci.cancel();
         }
 
         if (FeatureManager.INSTANCE.getFreecamFeature().isEnabled()

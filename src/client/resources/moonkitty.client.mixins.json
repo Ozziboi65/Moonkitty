@@ -7,8 +7,9 @@
 		"FreecamMixin",
 		"WorldchangerMixin",
 		"BlockPlayerMoveMixin",
-		"DisableLocalPredictFreecamMixin",
-		"BoatFlyMixin"
+		"DisableLocalPredictMixin",
+		"BoatFlyMixin",
+		"CriticalsMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

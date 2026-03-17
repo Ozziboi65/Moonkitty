@@ -40,6 +40,7 @@ import net.minecraft.block.entity.BarrelBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.block.entity.EnderChestBlockEntity;
+import net.minecraft.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.chunk.WorldChunk;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3i;
@@ -60,14 +61,17 @@ public class ChestEsp extends Feature {
     private boolean renderChest = true;
     private boolean renderEnderChest = true;
     private boolean renderBarrel = true;
+    private boolean renderShulker = true;
 
     public int chestColor = 0xFFFFDD54;
     public int enderChestColor = 0xFF00FFFF;
     public int barrelColor = 0xFF00FF00;
+    public int shulkerColor = 0xFF8A17FF;
 
     public List<ChestBlockEntity> chestList = new ArrayList<>();
     public List<EnderChestBlockEntity> enderChestList = new ArrayList<>();
     public List<BarrelBlockEntity> barrelList = new ArrayList<>();
+    public List<ShulkerBoxBlockEntity> shulkerList = new ArrayList<>();
 
     public ChestEsp() {
         this.name = "container esp";
@@ -117,6 +121,20 @@ public class ChestEsp extends Feature {
         setRenderBarrel(!this.renderBarrel);
     }
 
+    public boolean getRenderShulker() {
+        return renderShulker;
+    }
+
+    public void setRenderShulker(boolean enabled) {
+        if (this.renderShulker == enabled)
+            return;
+        this.renderShulker = enabled;
+    }
+
+    public void toggleRenderShulker() {
+        setRenderShulker(!this.renderShulker);
+    }
+
     public void setChestColor(int color) {
         this.chestColor = color;
     }
@@ -145,6 +163,11 @@ public class ChestEsp extends Feature {
                     GizmoDrawing.box(chest.getPos(), DrawStyle.stroked(barrelColor)).ignoreOcclusion();
             }
 
+            for (ShulkerBoxBlockEntity chest : shulkerList) {
+                if (renderShulker)
+                    GizmoDrawing.box(chest.getPos(), DrawStyle.stroked(shulkerColor)).ignoreOcclusion();
+            }
+
         });
 
         menuObject.registerNewFeatureButton(
@@ -164,6 +187,7 @@ public class ChestEsp extends Feature {
         chestList.clear();
         enderChestList.clear();
         barrelList.clear();
+        shulkerList.clear();
 
         int renderDist = client.options.getClampedViewDistance();
         ChunkPos center = client.player.getChunkPos();
@@ -199,6 +223,15 @@ public class ChestEsp extends Feature {
 
                     }
                 }
+
+                for (BlockEntity be : chunk.getBlockEntities().values()) {
+                    if (be instanceof ShulkerBoxBlockEntity chest) {
+
+                        shulkerList.add(chest);
+
+                    }
+                }
+
             }
         }
 

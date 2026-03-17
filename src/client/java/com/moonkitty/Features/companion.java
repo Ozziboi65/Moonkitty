@@ -65,6 +65,8 @@ public class companion extends Feature {
     private int currentFrame;
     private int speed = 3; // how many ticks to show a frame for
 
+    public String fileName = "1.gif";
+
     int x = 100;
     int y = 100;
     int width = 64;
@@ -130,25 +132,27 @@ public class companion extends Feature {
         return texture;
     }
 
-    @Override
-    public void init() {
-        Menu menuObject = Menu.INSTANCE;
-
-        menuObject.registerNewFeatureButton(
-                ButtonWidget.builder(
-                        Text.literal("Companion"),
-                        btn -> {
-                            MinecraftClient.getInstance().setScreen(new companionMenu(Menu.INSTANCE));
-                        }).dimensions(100, Menu.INSTANCE.getNextY(), 200, 20).build());
+    public void refresh() {
+        loadGif();
     }
 
-    @Override
-    protected void onEnable() {
+    private void loadGif() {
         MinecraftClient client = MinecraftClient.getInstance();
 
-        try {
+        if (textures != null) {
+            for (NativeImageBackedTexture texture : textures) {
+                if (texture != null) {
+                    texture.close();
+                }
+            }
+        }
 
-            InputStream inputGif = FileIO.InputStreamFromFile("moonkitty/1.gif");
+        try {
+            InputStream inputGif = FileIO.InputStreamFromFile("moonkitty/" + fileName);
+
+            if (inputGif == null) {
+                return;
+            }
 
             BufferedImage[] frames = GifLoader.loadGif(inputGif);
 
@@ -159,27 +163,48 @@ public class companion extends Feature {
             }
 
             Frame_count = textures.length;
-
-            HudRenderCallback.EVENT.register(
-                    (DrawContext drawContext, net.minecraft.client.render.RenderTickCounter tickDeltaManager) -> {
-                        if (textures == null || textures[currentFrame] == null)
-                            return;
-
-                        Identifier frameId = Identifier.of("moonkitty:companion_frame_" + currentFrame);
-
-                        drawContext.drawTexture(
-                                RenderPipelines.GUI_TEXTURED,
-                                frameId,
-                                x, y,
-                                0.0f, 0.0f,
-                                width, height,
-                                width, height);
-                    });
+            currentFrame = 0;
+            tickCounter = 0;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    @Override
+    public void init() {
+        Menu menuObject = Menu.INSTANCE;
+
+        menuObject.registerNewFeatureButton(
+                ButtonWidget.builder(
+                        Text.literal("Companion"),
+                        btn -> {
+                            MinecraftClient.getInstance().setScreen(new companionMenu(Menu.INSTANCE));
+                        }).dimensions(100, Menu.INSTANCE.getNextY(), 200, 20).build());
+
+        HudRenderCallback.EVENT.register(
+                (DrawContext drawContext, net.minecraft.client.render.RenderTickCounter tickDeltaManager) -> {
+                    if (!this.isEnabled())
+                        return;
+
+                    if (textures == null || textures[currentFrame] == null)
+                        return;
+
+                    Identifier frameId = Identifier.of("moonkitty:companion_frame_" + currentFrame);
+
+                    drawContext.drawTexture(
+                            RenderPipelines.GUI_TEXTURED,
+                            frameId,
+                            x, y,
+                            0.0f, 0.0f,
+                            width, height,
+                            width, height);
+                });
+    }
+
+    @Override
+    protected void onEnable() {
+        loadGif();
     }
 
     @Override

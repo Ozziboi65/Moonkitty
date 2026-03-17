@@ -18,6 +18,8 @@ import com.moonkitty.Features.AutoTotem;
 import com.moonkitty.Features.Visuals.PlayerAura;
 import com.moonkitty.Features.Combat.KillAura;
 import com.moonkitty.Features.Search;
+import com.moonkitty.Features.Combat.Criticals;
+import com.moonkitty.Features.Combat.StrafeAura;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +39,8 @@ public class FeatureManager {
     private final PlayerAura playerAuraFeature;
     private final KillAura killAuraFeature;
     private final Search searchFeature;
+    private final Criticals criticalsFeature;
+    private final StrafeAura strafeFeature;
     MinecraftClient client;
 
     public static final FeatureManager INSTANCE = new FeatureManager();
@@ -58,6 +62,8 @@ public class FeatureManager {
         this.playerAuraFeature = new PlayerAura();
         this.killAuraFeature = new KillAura();
         this.searchFeature = new Search();
+        this.criticalsFeature = new Criticals();
+        this.strafeFeature = new StrafeAura();
 
         featureList.add(espFeature);
         featureList.add(freecamFeature);
@@ -73,10 +79,16 @@ public class FeatureManager {
         featureList.add(playerAuraFeature);
         featureList.add(killAuraFeature);
         featureList.add(searchFeature);
+        featureList.add(criticalsFeature);
+        featureList.add(strafeFeature);
     }
 
     public esp getEspFeature() {
         return espFeature;
+    }
+
+    public Criticals getCritsFeature() {
+        return criticalsFeature;
     }
 
     public freecam getFreecamFeature() {
@@ -97,6 +109,10 @@ public class FeatureManager {
 
     public worldchanger getWorldchangerFeature() {
         return worldchangerFeature;
+    }
+
+    public StrafeAura getStrafeAuraFeature() {
+        return strafeFeature;
     }
 
     public blink getBlinkFeature() {

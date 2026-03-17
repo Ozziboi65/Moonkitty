@@ -73,11 +73,26 @@ public class ChestEspMenu extends Screen {
                         }).dimensions(centerX - 100, centerY, 200, 20).build());
 
         this.addDrawableChild(
+                ButtonWidget.builder(
+                        Text.literal("Shulker Color"),
+                        btn -> {
+                            int current = Espfeature.shulkerColor;
+                            client.setScreen(new ColorPicker(this, current, c -> {
+                                Espfeature.shulkerColor = c;
+                            }));
+                        }).dimensions(centerX - 100, centerY + 30, 200, 20).build());
+
+        Text descriptionText = Text.literal(
+                "HighLights Containers!");
+
+        int textWidth = this.textRenderer.getWidth(descriptionText);
+
+        this.addDrawableChild(
                 new TextWidget(
-                        centerX - 150,
-                        centerY - 120,
-                        325, 20,
-                        Text.literal("Highlights Storage Blocks"),
+                        (this.width - textWidth) / 2,
+                        centerY - 150,
+                        textWidth, 20,
+                        descriptionText,
                         this.textRenderer));
 
         this.addDrawableChild(
@@ -94,7 +109,7 @@ public class ChestEspMenu extends Screen {
                         button -> {
                             Espfeature.toggleRenderChest();
                             this.init();
-                        }).dimensions(centerX - 100, centerY + 30, 200, 20).build());
+                        }).dimensions(centerX - 100, centerY + 60, 200, 20).build());
 
         this.addDrawableChild(
                 ButtonWidget.builder(
@@ -102,7 +117,7 @@ public class ChestEspMenu extends Screen {
                         button -> {
                             Espfeature.toggleRenderEnderChest();
                             this.init();
-                        }).dimensions(centerX - 100, centerY + 60, 200, 20).build());
+                        }).dimensions(centerX - 100, centerY + 90, 200, 20).build());
 
         this.addDrawableChild(
                 ButtonWidget.builder(
@@ -110,7 +125,14 @@ public class ChestEspMenu extends Screen {
                         button -> {
                             Espfeature.toggleRenderBarrel();
                             this.init();
-                        }).dimensions(centerX - 100, centerY + 90, 200, 20).build());
+                        }).dimensions(centerX - 100, centerY + 120, 200, 20).build());
 
+        this.addDrawableChild(
+                ButtonWidget.builder(
+                        Text.literal("Show Shulkers: " + (Espfeature.getRenderShulker() ? "ON" : "OFF")),
+                        button -> {
+                            Espfeature.toggleRenderShulker();
+                            this.init();
+                        }).dimensions(centerX - 100, centerY + 150, 200, 20).build());
     }
 }

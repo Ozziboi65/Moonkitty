@@ -12,7 +12,7 @@ import com.moonkitty.FeatureManager;
 import net.minecraft.client.network.ClientPlayerEntity;
 
 @Mixin(ClientPlayerEntity.class)
-public abstract class DisableLocalPredictFreecamMixin {
+public abstract class DisableLocalPredictMixin {
 
     @Inject(method = "tickMovement", at = @At("HEAD"), cancellable = true)
     private void onTickMovement(CallbackInfo ci) {

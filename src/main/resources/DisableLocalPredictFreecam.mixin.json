@@ -3,7 +3,7 @@
 	"package": "com.moonkitty.Mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"DisableLocalPredictFreecamMixin"
+		"DisableLocalPredictMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

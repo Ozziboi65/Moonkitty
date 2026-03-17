@@ -63,6 +63,10 @@ public class Search extends Feature {
     private final Map<Long, Set<BlockPos>> chunkBlocks = new ConcurrentHashMap<>();
     private boolean needsFullUpdate = true;
 
+    private static final int MAX_TOTAL_BLOCKS = 50000;
+    private static final int MAX_BLOCKS_PER_CHUNK = 2000;
+    private boolean limitReached = false;
+
     Block target = Blocks.BLACKSTONE;
 
     public Search() {
@@ -108,6 +112,7 @@ public class Search extends Feature {
     @Override
     protected void onEnable() {
         needsFullUpdate = true;
+        limitReached = false;
     }
 
     @Override
@@ -116,6 +121,11 @@ public class Search extends Feature {
     }
 
     private void searchChunk(WorldChunk chunk) {
+
+        if (limitReached) {
+            return;
+        }
+
         long chunkKey = chunk.getPos().toLong();
         Set<BlockPos> foundBlocks = new HashSet<>();
 
@@ -126,7 +136,7 @@ public class Search extends Feature {
 
         ChunkSection[] sections = chunk.getSectionArray();
 
-        for (int sectionIndex = 0; sectionIndex < sections.length; sectionIndex++) {
+        sectionLoop: for (int sectionIndex = 0; sectionIndex < sections.length; sectionIndex++) {
             ChunkSection section = sections[sectionIndex];
 
             if (section == null || section.isEmpty())
@@ -155,6 +165,13 @@ public class Search extends Feature {
 
                         if (block == target) {
                             foundBlocks.add(new BlockPos(worldX + x, sectionY + y, worldZ + z));
+
+                            if (foundBlocks.size() >= MAX_BLOCKS_PER_CHUNK) {
+                                LOGGER.warn(
+                                        "[Search] Chunk exceeded block limit ({}). Target block '{}' ",
+                                        MAX_BLOCKS_PER_CHUNK, Registries.BLOCK.getId(target));
+                                break sectionLoop;
+                            }
                         }
                     }
                 }
@@ -163,6 +180,16 @@ public class Search extends Feature {
 
         if (!foundBlocks.isEmpty()) {
             chunkBlocks.put(chunkKey, foundBlocks);
+
+            int totalBlocks = chunkBlocks.values().stream().mapToInt(Set::size).sum();
+            if (totalBlocks >= MAX_TOTAL_BLOCKS) {
+                limitReached = true;
+                LOGGER.error("[Search] MEMORY LIMIT REACHED! Found {} blocks stopping",
+                        totalBlocks);
+                LOGGER.error(
+                        "[Search] Block '{}' is too many",
+                        Registries.BLOCK.getId(target));
+            }
         } else {
             chunkBlocks.remove(chunkKey);
         }
@@ -173,6 +200,8 @@ public class Search extends Feature {
         if (newTarget != null && newTarget != Blocks.AIR) {
             target = newTarget;
             needsFullUpdate = true;
+            limitReached = false; // Reset limit when changing target
+            LOGGER.info("[Search] Target set to: {}", name);
         }
     }
 

@@ -128,17 +128,22 @@ public class companionMenu extends Screen {
                             this.init();
                         }).dimensions(centerX - 100, centerY - 90, 200, 20).build());
 
+        Text descriptionText = Text.literal(
+                "Small Gif That You Can Move Around :3, Place Your Gif At The [YOUR MINECRAFT FOLDER]/moonkitty/ Folder And Type The Name At The TextBox");
+
+        int textWidth = this.textRenderer.getWidth(descriptionText);
+
         this.addDrawableChild(
                 new TextWidget(
-                        centerX - 300,
-                        centerY - 120,
-                        600, 20,
-                        Text.literal(
-                                "Small Gif That You Can Move Around :3,  Place Your Gif At The moonkitty/gif folder."),
+                        (this.width - textWidth) / 2,
+                        centerY - 130,
+                        textWidth, 20,
+                        descriptionText,
                         this.textRenderer));
 
         GifName.setChangedListener(value -> {
-            System.out.println(value);
+            feature.fileName = value;
+            feature.refresh();
         });
 
         this.addDrawableChild(XcordSlider);

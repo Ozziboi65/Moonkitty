@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import com.moonkitty.Feature;
 import com.moonkitty.Mixin.CameraAccessor;
 import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.DrawStyle;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.util.math.Vec3d;
@@ -29,41 +30,34 @@ import com.moonkitty.MoonkittyClient;
 import net.minecraft.util.Identifier;
 import com.moonkitty.Features.Menu.BlinkMenu;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.util.math.Box;
+
+import net.minecraft.world.debug.gizmo.GizmoDrawing;
 
 public class blink extends Feature {
     public static final Logger LOGGER = LoggerFactory.getLogger("moonkitty");
-    public MinecraftClient McClient;
-
-    public Vec3d Freecam_position = Vec3d.ZERO;
-    public Vec3d Freecam_orginal_pos = Vec3d.ZERO;
 
     public boolean initialized = false;
 
-    int Pulse_tick_delta = 3;
-
-    int Cancel_duration = 1;
-
-    boolean Should_Cancel_packet;
+    public boolean shouldCancelPacket;
 
     int tickCounter;
 
-    int cancelTicksRemaining = 0;
+    public int tickTime = 15;
+    public int tickCancelTime = 5;
+
+    public int boxColor = 0xFF3eadad;
 
     MinecraftClient mc = MinecraftClient.getInstance();
 
-    public static final List<PlayerMoveC2SPacket> buffer = new ArrayList<>();
-
-    public static boolean isFlushing = false;
-
-    PlayerEntity player = MinecraftClient.getInstance().player;
-
-    public static Vec3d savedPos = Vec3d.ZERO;
+    public Box lastHitBox;
 
     @Override
     protected void onEnable() {
@@ -95,42 +89,6 @@ public class blink extends Feature {
 
     }
 
-    public static void flushPackets() {
-        isFlushing = true;
-
-        savedPos = new Vec3d(
-                MinecraftClient.getInstance().player.getX(),
-                MinecraftClient.getInstance().player.getY(),
-                MinecraftClient.getInstance().player.getZ());
-
-        List<PlayerMoveC2SPacket> copy = new ArrayList<>(buffer); // copy
-        buffer.clear();
-        for (PlayerMoveC2SPacket packet : copy) {
-            MinecraftClient.getInstance().getNetworkHandler().sendPacket(packet);
-        }
-        isFlushing = false;
-    }
-
-    public int getPulse() {
-        return Pulse_tick_delta;
-    }
-
-    public int getCancelDuration() {
-        return Cancel_duration;
-    }
-
-    public void setCancelDuration(int wanted) {
-        Cancel_duration = wanted;
-    }
-
-    public boolean getShouldCancelPacket() {
-        return Should_Cancel_packet;
-    }
-
-    public void setPulse(int wanted) {
-        Pulse_tick_delta = wanted;
-    }
-
     @Override
     public void init() {
 
@@ -142,12 +100,21 @@ public class blink extends Feature {
                         btn -> {
                             MinecraftClient.getInstance().setScreen(new BlinkMenu(Menu.INSTANCE));
                         }).dimensions(100, Menu.INSTANCE.getNextY(), 200, 20).build());
+
+        WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> {
+            if (!this.isEnabled())
+                return;
+
+            if (lastHitBox != null) {
+                GizmoDrawing.box(lastHitBox, DrawStyle.stroked(boxColor, 2)).ignoreOcclusion();
+            }
+        });
     }
 
     @Override
     protected void onDisable() {
-        System.out.println("disabled blink");
-        flushPackets();
+        tickCounter = 0;
+        shouldCancelPacket = false;
     }
 
     @Override
@@ -158,27 +125,27 @@ public class blink extends Feature {
             this.toggle();
         }
 
-        if (this.isEnabled()) {
+        if (lastHitBox == null && client.player != null) {
+            lastHitBox = client.player.getBoundingBox();
+        }
+
+        if (isEnabled()) {
+
             tickCounter++;
 
-            if (Pulse_tick_delta <= 0)
-                Pulse_tick_delta = 1;
-            if (Cancel_duration <= 0)
-                Cancel_duration = 1;
+            if (tickCounter < tickCancelTime) {
+                shouldCancelPacket = true;
 
-            if (tickCounter >= Pulse_tick_delta) {
-                cancelTicksRemaining = Cancel_duration;
-                flushPackets();
+                if (tickCounter == 1 && client.player != null) {
+                    lastHitBox = client.player.getBoundingBox();
+                }
+
+            } else if (tickCounter < tickTime * 2) {
+                shouldCancelPacket = false;
+            } else {
+                shouldCancelPacket = false;
                 tickCounter = 0;
             }
-
-            if (cancelTicksRemaining > 0) {
-                Should_Cancel_packet = true;
-                cancelTicksRemaining--;
-            } else {
-                Should_Cancel_packet = false;
-            }
-
         }
 
     }
