@@ -9,7 +9,9 @@
 		"BlockPlayerMoveMixin",
 		"DisableLocalPredictMixin",
 		"BoatFlyMixin",
-		"CriticalsMixin"
+		"CriticalsMixin",
+		"setPacketRotMixin",
+		"IPlayerMoveC2SPacket"
 	],
 	"injectors": {
 		"defaultRequire": 1

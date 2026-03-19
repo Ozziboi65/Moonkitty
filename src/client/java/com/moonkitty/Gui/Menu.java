@@ -37,6 +37,8 @@ public class Menu extends Screen {
 
     private static final List<ButtonWidget> pendingButtons = new ArrayList<>();
 
+    public static int bgColor = 0xCC0D0D1A;
+
     public Menu(Screen parent) {
         super(Text.literal("Menu"));
         this.parent = parent;

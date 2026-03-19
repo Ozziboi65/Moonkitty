@@ -4,59 +4,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.moonkitty.Feature;
-import com.moonkitty.MoonkittyClient;
 import com.moonkitty.Features.Menu.KillAuraMenu;
 import com.moonkitty.Gui.Menu;
-
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
-import net.minecraft.advancement.PlayerAdvancementTracker;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
-import net.minecraft.world.debug.gizmo.GizmoDrawing;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import net.minecraft.entity.Entity;
-import net.minecraft.client.MinecraftClient;
-
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
-import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
-import org.joml.Matrix4f;
+import com.moonkitty.Util.ConfigUtil;
+import com.moonkitty.Features.Combat.KillAuraHud;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.world.World;
-import net.minecraft.text.Text;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.network.packet.c2s.play.HandSwingC2SPacket;
-import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
-import net.minecraft.util.Hand;
-import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
-import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
-
 import net.minecraft.network.packet.c2s.play.HandSwingC2SPacket;
+import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
-
-import com.moonkitty.Util.ConfigUtil;
-import com.google.gson.JsonObject;
-
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
-import net.minecraft.entity.Entity;
-
-import com.moonkitty.Features.Combat.KillAuraHud;
+import net.minecraft.world.World;
 
 public class KillAura extends Feature {
     public static final Logger LOGGER = LoggerFactory.getLogger("moonkitty");
@@ -68,8 +34,12 @@ public class KillAura extends Feature {
     long lastAttackTime = 0;
 
     public boolean swingHand;
-
     public boolean checkVisible;
+    public boolean lookAtTarget = true;
+
+    public float[] rot;
+
+    public AbstractClientPlayerEntity currentTarget = null;
 
     public KillAura() {
         this.name = "Kill Aura";
@@ -126,6 +96,8 @@ public class KillAura extends Feature {
         this.McClient = MinecraftClient.getInstance();
         Menu menuObject = Menu.INSTANCE;
 
+        rot = new float[2];
+
         menuObject.registerNewFeatureButton(
                 ButtonWidget.builder(
                         Text.literal("Kill Aura"),
@@ -147,16 +119,11 @@ public class KillAura extends Feature {
         if (!isEnabled() || client.player == null || McClient.world == null)
             return;
 
-        long now = System.currentTimeMillis();
-
-        if (!(now - lastAttackTime >= attackDelay))
-            return;
+        currentTarget = null;
 
         for (AbstractClientPlayerEntity player : client.world.getPlayers()) {
 
             if (player == client.player) {
-                if (KillAuraHud.target == player)
-                    KillAuraHud.target = null;
                 continue;
             }
 
@@ -167,8 +134,6 @@ public class KillAura extends Feature {
             double distSq = dx * dx + dy * dy + dz * dz;
 
             if (distSq > reach * reach) {
-                if (KillAuraHud.target == player)
-                    KillAuraHud.target = null;
                 continue;
             }
 
@@ -184,30 +149,46 @@ public class KillAura extends Feature {
 
             BlockHitResult hit = client.world.raycast(context);
 
-            boolean visible = hit.getType() == HitResult.Type.MISS || // visible is false if we can see them
+            boolean visible = hit.getType() == HitResult.Type.MISS ||
                     hit.getPos().distanceTo(start) >= start.distanceTo(end);
 
             if (checkVisible && !visible) {
                 continue;
             }
+            currentTarget = player;
+
+            if (lookAtTarget) {
+                rot = getRotationForAim(client.player, player);
+            }
 
             KillAuraHud.target = player;
 
-            if (swingHand) {
-                if (client.player != null) {
+            long now = System.currentTimeMillis();
+            if (now - lastAttackTime >= attackDelay) {
+                if (swingHand) {
                     client.player.swingHand(Hand.MAIN_HAND);
                 }
+
+                client.getNetworkHandler().sendPacket(new HandSwingC2SPacket(Hand.MAIN_HAND));
+                client.getNetworkHandler().sendPacket(
+                        PlayerInteractEntityC2SPacket.attack(player, client.player.isSneaking()));
+
+                lastAttackTime = now;
             }
-
-            client.getNetworkHandler().sendPacket(
-                    new HandSwingC2SPacket(Hand.MAIN_HAND));
-
-            client.getNetworkHandler().sendPacket(
-
-                    PlayerInteractEntityC2SPacket.attack(player, client.player.isSneaking()));
-
-            lastAttackTime = now;
+            return;
         }
+    }
+
+    public static float[] getRotationForAim(ClientPlayerEntity player, Entity target) {
+        double dx = target.getX() - player.getX();
+        double dz = target.getZ() - player.getZ();
+        double targetY = target.getY() + target.getHeight() * 0.5;// center
+        double playerY = player.getY() + player.getEyeHeight(player.getPose());
+        double dy = targetY - playerY;
+        double distXZ = Math.sqrt(dx * dx + dz * dz);
+        float yaw = (float) (Math.toDegrees(Math.atan2(dz, dx)) - 90.0);
+        float pitch = (float) (-Math.toDegrees(Math.atan2(dy, distXZ)));
+        return new float[] { yaw, pitch };
     }
 
 }

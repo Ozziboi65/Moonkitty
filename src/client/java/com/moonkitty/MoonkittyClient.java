@@ -10,7 +10,7 @@ import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.moonkitty.Gui.HackList;
+import com.moonkitty.Gui.Hud;
 import com.moonkitty.Gui.Menu;
 import com.moonkitty.Util.ConfigUtil;
 import com.moonkitty.Util.FileIO;
@@ -70,7 +70,7 @@ public class MoonkittyClient implements ClientModInitializer {
 
                 ConfigUtil.init();
 
-                HackList.init();
+                Hud.init();
 
                 ClientTickEvents.END_CLIENT_TICK.register(client -> {
 

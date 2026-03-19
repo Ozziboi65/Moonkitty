@@ -50,8 +50,8 @@ public class blink extends Feature {
 
     int tickCounter;
 
-    public int tickTime = 15;
-    public int tickCancelTime = 5;
+    public int tickTime = 4;
+    public int tickCancelTime = 2;
 
     public int boxColor = 0xFF3eadad;
 
@@ -106,7 +106,7 @@ public class blink extends Feature {
                 return;
 
             if (lastHitBox != null) {
-                GizmoDrawing.box(lastHitBox, DrawStyle.stroked(boxColor, 2)).ignoreOcclusion();
+                GizmoDrawing.box(lastHitBox, DrawStyle.stroked(boxColor, 2));
             }
         });
     }

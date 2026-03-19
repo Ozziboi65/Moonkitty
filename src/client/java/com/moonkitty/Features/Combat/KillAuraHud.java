@@ -47,84 +47,98 @@ import net.minecraft.client.gui.DrawContext;
 
 public class KillAuraHud {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger("moonkitty");
-    public static MinecraftClient McClient;
+        public static final Logger LOGGER = LoggerFactory.getLogger("moonkitty");
+        public static MinecraftClient McClient;
 
-    static int screenWidth;
-    static int screenHeight;
+        static int screenWidth;
+        static int screenHeight;
 
-    static int verticalPadding = 75;
+        static int verticalPadding = 75;
 
-    boolean initialized = false;
+        static int panelInternalPadding = 10;
 
-    public static AbstractClientPlayerEntity target;
+        boolean initialized = false;
 
-    public static void init() {
-        McClient = MinecraftClient.getInstance();
-        Menu menuObject = Menu.INSTANCE;
+        public static AbstractClientPlayerEntity target;
 
-        HudRenderCallback.EVENT.register(
-                (DrawContext drawContext, net.minecraft.client.render.RenderTickCounter tickDeltaManager) -> {
-                    MinecraftClient mc = MinecraftClient.getInstance();
+        public static void init() {
+                McClient = MinecraftClient.getInstance();
+                Menu menuObject = Menu.INSTANCE;
 
-                    if (target == null)
-                        return;
+                HudRenderCallback.EVENT.register(
+                                (DrawContext drawContext,
+                                                net.minecraft.client.render.RenderTickCounter tickDeltaManager) -> {
+                                        MinecraftClient mc = MinecraftClient.getInstance();
 
-                    if (McClient.getWindow() != null) {
-                        screenWidth = McClient.getWindow().getScaledWidth();
-                        screenHeight = McClient.getWindow().getScaledHeight();
-                    }
+                                        if (target == null)
+                                                return;
 
-                    net.minecraft.text.Text targetText = net.minecraft.text.Text
-                            .literal("KillAura Target: " + target.getNameForScoreboard());
-                    int textWidth = mc.textRenderer.getWidth(targetText);
-                    int x = (screenWidth - textWidth) / 2;
-                    int y = screenHeight - mc.textRenderer.fontHeight - verticalPadding;
+                                        if (McClient.getWindow() != null) {
+                                                screenWidth = McClient.getWindow().getScaledWidth();
+                                                screenHeight = McClient.getWindow().getScaledHeight();
+                                        }
 
-                    net.minecraft.text.Text targetTextHP = net.minecraft.text.Text
-                            .literal((String.format("HP: %.1f", target.getHealth())
-                                    + String.format(" / %.1f", target.getHealth())));
-                    int textWidth2 = mc.textRenderer.getWidth(targetTextHP);
-                    int x2 = (screenWidth - textWidth2) / 2;
-                    int y2 = screenHeight - mc.textRenderer.fontHeight - verticalPadding
-                            - (mc.textRenderer.fontHeight * 2);
+                                        net.minecraft.text.Text targetText = net.minecraft.text.Text
+                                                        .literal("KillAura Target: " + target.getNameForScoreboard());
+                                        int textWidth = mc.textRenderer.getWidth(targetText);
+                                        int x = (screenWidth - textWidth) / 2;
+                                        int y = screenHeight - mc.textRenderer.fontHeight - verticalPadding;
 
-                    net.minecraft.item.ItemStack heldStack = target.getMainHandStack();
-                    String heldName = "None";
-                    if (heldStack != null && !heldStack.isEmpty()) {
-                        heldName = heldStack.getName().getString();
-                    }
+                                        net.minecraft.text.Text targetTextHP = net.minecraft.text.Text
+                                                        .literal((String.format("HP: %.1f", target.getHealth())
+                                                                        + String.format(" / %.1f",
+                                                                                        target.getHealth())));
+                                        int textWidth2 = mc.textRenderer.getWidth(targetTextHP);
+                                        int x2 = (screenWidth - textWidth2) / 2;
+                                        int y2 = screenHeight - mc.textRenderer.fontHeight - verticalPadding
+                                                        - (mc.textRenderer.fontHeight * 2);
 
-                    net.minecraft.text.Text targetTextCooldown = net.minecraft.text.Text
-                            .literal("Holding Item: " + heldName);
+                                        net.minecraft.item.ItemStack heldStack = target.getMainHandStack();
+                                        String heldName = "None";
+                                        if (heldStack != null && !heldStack.isEmpty()) {
+                                                heldName = heldStack.getName().getString();
+                                        }
 
-                    int textWidthCooldown = mc.textRenderer.getWidth(targetTextCooldown);
-                    int xCooldown = (screenWidth - textWidthCooldown) / 2;
-                    int yCooldown = screenHeight - mc.textRenderer.fontHeight - verticalPadding
-                            - mc.textRenderer.fontHeight;
+                                        net.minecraft.text.Text targetTextCooldown = net.minecraft.text.Text
+                                                        .literal("Holding Item: " + heldName);
 
-                    // drawContext.fill(x1, y1, x2, y2, color);
+                                        int textWidthCooldown = mc.textRenderer.getWidth(targetTextCooldown);
 
-                    drawContext.drawTextWithShadow(
-                            mc.textRenderer,
-                            targetTextHP,
-                            x2, y,
-                            0xFFFFFFFF);
+                                        int xCooldown = (screenWidth - textWidthCooldown) / 2;
+                                        int yCooldown = screenHeight - mc.textRenderer.fontHeight - verticalPadding
+                                                        - mc.textRenderer.fontHeight;
 
-                    drawContext.drawTextWithShadow(
-                            mc.textRenderer,
-                            targetText,
-                            x, y2,
-                            0xFFFFFFFF);
+                                        int panelWidth = textWidth + panelInternalPadding;
+                                        int panelHeight = (mc.textRenderer.fontHeight * 3);
 
-                    drawContext.drawTextWithShadow(
-                            mc.textRenderer,
-                            targetTextCooldown,
-                            xCooldown, yCooldown,
-                            0xFFFFFFFF);
+                                        int x3 = (screenWidth - panelWidth) / 2;
+                                        int x4 = x3 + panelWidth;
 
-                });
+                                        int y4 = screenHeight - verticalPadding;
+                                        int y3 = y4 - panelHeight;
 
-    }
+                                        drawContext.fill(x3, y3, x4, y4, 0x4D000000);
+
+                                        drawContext.drawTextWithShadow(
+                                                        mc.textRenderer,
+                                                        targetTextHP,
+                                                        x2, y,
+                                                        0xFFFFFFFF);
+
+                                        drawContext.drawTextWithShadow(
+                                                        mc.textRenderer,
+                                                        targetText,
+                                                        x, y2,
+                                                        0xFFFFFFFF);
+
+                                        drawContext.drawTextWithShadow(
+                                                        mc.textRenderer,
+                                                        targetTextCooldown,
+                                                        xCooldown, yCooldown,
+                                                        0xFFFFFFFF);
+
+                                });
+
+        }
 
 }
