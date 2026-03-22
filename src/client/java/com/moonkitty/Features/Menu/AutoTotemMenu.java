@@ -68,5 +68,14 @@ public class AutoTotemMenu extends Screen {
 
         this.addDrawableChild(delaySlider);
         delaySlider.setMessage(Text.literal("Delay(ms): " + feature.getDelay()));
+
+        this.addDrawableChild(
+                ButtonWidget.builder(
+                        Text.literal("Disable In Containers: " + (feature.getDisableContainer() ? "ON" : "OFF")),
+                        button -> {
+                            feature.toggleContainer();
+                            this.init();
+                        }).dimensions(centerX - 125, centerY - 30, 150, 20).build());
+
     }
 }

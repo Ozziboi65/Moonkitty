@@ -15,6 +15,7 @@ import com.moonkitty.Features.Menu.BlinkMenu;
 import com.moonkitty.Features.Menu.TriggerBotMenu;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.Window;
 
@@ -35,6 +36,11 @@ public class Menu extends Screen {
     int Xsize;
     int Ysize;
 
+    static int screenWidth;
+    static int screenHeight;
+
+    static Boolean inited = false;
+
     private static final List<ButtonWidget> pendingButtons = new ArrayList<>();
 
     public static int bgColor = 0xCC0D0D1A;
@@ -52,8 +58,17 @@ public class Menu extends Screen {
     }
 
     @Override
-    protected void init() {
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.render(context, mouseX, mouseY, delta);
+    }
 
+    @Override
+    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
+        context.fill(0, 0, this.width, this.height, bgColor);
+    }
+
+    @Override
+    protected void init() {
         super.init();
         for (ButtonWidget button : pendingButtons) {
             this.addDrawableChild(button);

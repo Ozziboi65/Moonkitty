@@ -17,6 +17,7 @@ import com.moonkitty.Features.Menu.AutoTotemMenu;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.Window;
 import net.minecraft.item.Items;
 import net.minecraft.client.gui.widget.SliderWidget;
@@ -40,10 +41,26 @@ public class AutoTotem extends Feature {
 
     int delay = 200;
 
+    public boolean disableInContainers = true;
+
     public AutoTotem() {
         this.name = "AutoTotem";
         this.feature_id = 4567;
         this.setEnabled(true);
+    }
+
+    public boolean getDisableContainer() {
+        return disableInContainers;
+    }
+
+    public void setContainer(boolean enabled) {
+        if (this.disableInContainers == enabled)
+            return;
+        this.disableInContainers = enabled;
+    }
+
+    public void toggleContainer() {
+        setContainer(!this.disableInContainers);
     }
 
     @Override
@@ -69,6 +86,10 @@ public class AutoTotem extends Feature {
 
         if (client.player.getOffHandStack().getItem() == Items.TOTEM_OF_UNDYING)
             return;
+
+        if (client.currentScreen instanceof HandledScreen<?> && disableInContainers) {
+            return;
+        }
 
         long now = System.currentTimeMillis();
         int invSlot = -1;

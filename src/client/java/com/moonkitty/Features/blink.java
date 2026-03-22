@@ -122,6 +122,10 @@ public class blink extends Feature {
 
         if (MoonkittyClient.TOGGLE_BLINK.wasPressed()) {
             LOGGER.info("Toggle Blink bind pressed");
+
+            client.inGameHud.getChatHud().addMessage(
+                    Text.literal("[MOONKITTY]Blink Toggled With Keybind!"));
+
             this.toggle();
         }
 

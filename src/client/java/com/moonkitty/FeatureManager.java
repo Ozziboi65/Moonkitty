@@ -20,6 +20,7 @@ import com.moonkitty.Features.Combat.KillAura;
 import com.moonkitty.Features.Search;
 import com.moonkitty.Features.Combat.Criticals;
 import com.moonkitty.Features.Combat.StrafeAura;
+import com.moonkitty.Features.StashFinder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,7 @@ public class FeatureManager {
     private final Search searchFeature;
     private final Criticals criticalsFeature;
     private final StrafeAura strafeFeature;
+    private final StashFinder stashFinderFeature;
     MinecraftClient client;
 
     public static final FeatureManager INSTANCE = new FeatureManager();
@@ -64,6 +66,7 @@ public class FeatureManager {
         this.searchFeature = new Search();
         this.criticalsFeature = new Criticals();
         this.strafeFeature = new StrafeAura();
+        this.stashFinderFeature = new StashFinder();
 
         featureList.add(espFeature);
         featureList.add(freecamFeature);
@@ -81,10 +84,15 @@ public class FeatureManager {
         featureList.add(searchFeature);
         featureList.add(criticalsFeature);
         featureList.add(strafeFeature);
+        featureList.add(stashFinderFeature);
     }
 
     public esp getEspFeature() {
         return espFeature;
+    }
+
+    public StashFinder getStashFinderFeature() {
+        return stashFinderFeature;
     }
 
     public Criticals getCritsFeature() {

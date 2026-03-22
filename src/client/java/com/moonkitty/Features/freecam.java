@@ -97,6 +97,10 @@ public class freecam extends Feature {
     public void tick(MinecraftClient client) {
         if (MoonkittyClient.TOGGLE_FREECAM.wasPressed()) {
             LOGGER.info("Toggle Free cam bind pressed");
+
+            client.inGameHud.getChatHud().addMessage(
+                    Text.literal("[MOONKITTY]Freecam Toggled With Keybind!"));
+
             this.toggle();
         }
     }

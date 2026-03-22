@@ -53,16 +53,18 @@ public class EspMixin {
 
     @Inject(at = @At("HEAD"), method = "getTeamColorValue", cancellable = true)
     private void getTeamColorValue(CallbackInfoReturnable<Integer> cir) {
-        Entity entity = (Entity) (Object) this;
 
-        if (entity instanceof PlayerEntity)
-            cir.setReturnValue(esp_feature.color_player);
+        if (esp_feature.isEnabled() && esp_feature.getOutline()) {
+            Entity entity = (Entity) (Object) this;
+            if (entity instanceof PlayerEntity)
+                cir.setReturnValue(esp_feature.color_player);
 
-        if (entity instanceof HostileEntity)
-            cir.setReturnValue(esp_feature.color_hostile);
+            if (entity instanceof HostileEntity)
+                cir.setReturnValue(esp_feature.color_hostile);
 
-        if (entity instanceof ItemEntity)
-            cir.setReturnValue(esp_feature.color_item);
+            if (entity instanceof ItemEntity)
+                cir.setReturnValue(esp_feature.color_item);
+        }
 
     }
 
