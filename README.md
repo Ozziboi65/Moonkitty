@@ -1,5 +1,5 @@
 # Moonkitty
-Most Minimal Minecraft Cheat Client
+**Minecraft Hacked Client Made Specfically To Be Minimal And For Vanilla**
 
 # [Moonkitty Homepage](https://sigmacat123.com/moonkitty/moonkitty.html)
 
@@ -33,6 +33,8 @@ Most Minimal Minecraft Cheat Client
   Particle Aura
 
   HackList
+
+  StashFinder
   
 
 # ScreenShots:
