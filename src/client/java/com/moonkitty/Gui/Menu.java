@@ -5,14 +5,6 @@ import java.util.ArrayList;
 import com.moonkitty.Feature;
 import com.moonkitty.FeatureManager;
 import com.moonkitty.Features.esp;
-import com.moonkitty.Features.Menu.freecamMenu;
-import com.moonkitty.Features.Menu.EspMenu;
-import com.moonkitty.Features.fakeplayer;
-import com.moonkitty.Features.Menu.worldchangerMenu;
-import com.moonkitty.Features.companion;
-import com.moonkitty.Features.Menu.companionMenu;
-import com.moonkitty.Features.Menu.BlinkMenu;
-import com.moonkitty.Features.Menu.TriggerBotMenu;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.gui.DrawContext;
@@ -43,7 +35,8 @@ public class Menu extends Screen {
 
     private static final List<ButtonWidget> pendingButtons = new ArrayList<>();
 
-    public static int bgColor = 0xCC0D0D1A;
+    public final static int BG_COLOR = 0xCC0D0D1A;
+    public final static int HEADER_COLOR = 0xFF9013ba;
 
     public Menu(Screen parent) {
         super(Text.literal("Menu"));
@@ -64,7 +57,7 @@ public class Menu extends Screen {
 
     @Override
     public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-        context.fill(0, 0, this.width, this.height, bgColor);
+        context.fill(0, 0, this.width, this.height, BG_COLOR);
     }
 
     @Override

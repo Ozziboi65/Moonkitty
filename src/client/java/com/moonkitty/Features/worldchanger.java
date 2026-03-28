@@ -3,9 +3,9 @@ package com.moonkitty.Features;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.moonkitty.Category;
 import com.moonkitty.Feature;
 import com.moonkitty.Gui.Menu;
-import com.moonkitty.Features.Menu.worldchangerMenu;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.world.World;
@@ -23,6 +23,7 @@ public class worldchanger extends Feature {
     public worldchanger() {
         this.name = "WorldChanger";
         this.feature_id = 5;
+        this.setCategory(Category.WORLD);
         this.setEnabled(true);
     }
 
@@ -34,12 +35,6 @@ public class worldchanger extends Feature {
     public void init() {
         Menu menuObject = Menu.INSTANCE;
 
-        menuObject.registerNewFeatureButton(
-                ButtonWidget.builder(
-                        Text.literal("WorldChanger"),
-                        btn -> {
-                            MinecraftClient.getInstance().setScreen(new worldchangerMenu(Menu.INSTANCE));
-                        }).dimensions(100, Menu.INSTANCE.getNextY(), 200, 20).build());
     }
 
     public void setTime(long Wantedtime) {

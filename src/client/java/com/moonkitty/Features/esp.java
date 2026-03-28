@@ -3,8 +3,10 @@ package com.moonkitty.Features;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.moonkitty.BooleanSetting;
+import com.moonkitty.Category;
 import com.moonkitty.Feature;
-import com.moonkitty.Features.Menu.EspMenu;
+import com.moonkitty.NumberSetting;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.world.World;
@@ -16,16 +18,10 @@ import net.minecraft.util.math.Vec3d;
 import com.moonkitty.Feature;
 import com.moonkitty.FeatureManager;
 import com.moonkitty.Features.esp;
-import com.moonkitty.Features.Menu.freecamMenu;
-import com.moonkitty.Features.Menu.EspMenu;
-import com.moonkitty.Features.fakeplayer;
-import com.moonkitty.Features.Menu.worldchangerMenu;
-import com.moonkitty.Features.companion;
-import com.moonkitty.Features.Menu.companionMenu;
-import com.moonkitty.Features.Menu.BlinkMenu;
-import com.moonkitty.Features.Menu.TriggerBotMenu;
 
-import com.moonkitty.Features.Menu.EspMenu;
+import com.moonkitty.Features.fakeplayer;
+import com.moonkitty.Features.companion;
+
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 import net.minecraft.client.gui.screen.Screen;
@@ -51,6 +47,11 @@ public class esp extends Feature {
     public static final Logger LOGGER = LoggerFactory.getLogger("moonkitty");
     public MinecraftClient McClient;
 
+    private NumberSetting rangeSetting;
+    private BooleanSetting boxSetting;
+    private BooleanSetting hostileSetting;
+    private BooleanSetting itemSetting;
+
     private int range = 50;
     private World world;
 
@@ -70,7 +71,16 @@ public class esp extends Feature {
     public esp() {
         this.name = "ESP";
         this.feature_id = 1;
+        this.setCategory(Category.RENDER);
         this.setEnabled(true);
+
+        boxSetting = new BooleanSetting("Box", true);
+        hostileSetting = new BooleanSetting("Hostile", false);
+        itemSetting = new BooleanSetting("Items", false);
+
+        addSetting(boxSetting);
+        addSetting(hostileSetting);
+        addSetting(itemSetting);
     }
 
     public boolean getHostile() {
@@ -93,16 +103,12 @@ public class esp extends Feature {
     public void init() {
         this.McClient = MinecraftClient.getInstance();
         Menu menuObject = Menu.INSTANCE;
-        Vec3d playerPos;
-
-        menuObject.registerNewFeatureButton(
-                ButtonWidget.builder(
-                        Text.literal("ESP"),
-                        btn -> {
-                            MinecraftClient.getInstance().setScreen(new EspMenu(Menu.INSTANCE));
-                        }).dimensions(100, Menu.INSTANCE.getNextY(), 200, 20).build());
 
         WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> {
+            renderBox = boxSetting.getValue();
+            showHostile = hostileSetting.getValue();
+            showItem = itemSetting.getValue();
+
             if (!isEnabled() || McClient.player == null || McClient.world == null)
                 return;
 

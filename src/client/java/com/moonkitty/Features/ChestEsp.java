@@ -3,8 +3,8 @@ package com.moonkitty.Features;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.moonkitty.Category;
 import com.moonkitty.Feature;
-import com.moonkitty.Features.Menu.EspMenu;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.world.World;
@@ -16,16 +16,12 @@ import com.moonkitty.Feature;
 import com.moonkitty.FeatureManager;
 import com.moonkitty.MoonkittyClient;
 import com.moonkitty.Features.esp;
-import com.moonkitty.Features.Menu.ChestEspMenu;
-import com.moonkitty.Features.Menu.EspMenu;
-import com.moonkitty.Features.fakeplayer;
-import com.moonkitty.Features.Menu.worldchangerMenu;
-import com.moonkitty.Features.companion;
-import com.moonkitty.Features.Menu.companionMenu;
-import com.moonkitty.Features.Menu.BlinkMenu;
-import com.moonkitty.Features.Menu.TriggerBotMenu;
 
-import com.moonkitty.Features.Menu.EspMenu;
+import com.moonkitty.Features.fakeplayer;
+
+import com.moonkitty.Features.companion;
+
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.Window;
@@ -44,9 +40,13 @@ import net.minecraft.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.chunk.WorldChunk;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.Vec3d;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
-import net.minecraft.world.debug.gizmo.GizmoDrawing;
-import net.minecraft.client.render.DrawStyle;
+
+import com.moonkitty.Util.RenderUtil;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.Camera;
+import net.minecraft.client.util.math.MatrixStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,9 +54,6 @@ import java.util.List;
 public class ChestEsp extends Feature {
     public static final Logger LOGGER = LoggerFactory.getLogger("moonkitty");
     public MinecraftClient McClient;
-
-    private int range = 50;
-    private World world;
 
     private boolean renderChest = true;
     private boolean renderEnderChest = true;
@@ -68,6 +65,9 @@ public class ChestEsp extends Feature {
     public int barrelColor = 0xFF00FF00;
     public int shulkerColor = 0xFF8A17FF;
 
+    private int scanTime = 0;
+    public int scanInterval = 20;
+
     public List<ChestBlockEntity> chestList = new ArrayList<>();
     public List<EnderChestBlockEntity> enderChestList = new ArrayList<>();
     public List<BarrelBlockEntity> barrelList = new ArrayList<>();
@@ -76,6 +76,7 @@ public class ChestEsp extends Feature {
     public ChestEsp() {
         this.name = "container esp";
         this.feature_id = 58;
+        this.setCategory(Category.RENDER);
         this.setEnabled(true);
     }
 
@@ -145,37 +146,42 @@ public class ChestEsp extends Feature {
         Menu menuObject = Menu.INSTANCE;
 
         WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> {
-            if (!isEnabled() || chestList.isEmpty())
+            if (!isEnabled())
                 return;
 
-            for (ChestBlockEntity chest : chestList) {
-                if (renderChest)
-                    GizmoDrawing.box(chest.getPos(), DrawStyle.stroked(chestColor)).ignoreOcclusion();
+            if (context.consumers() == null)
+                return;
+
+            Camera camera = McClient.gameRenderer.getCamera();
+            Vec3d cam = camera.getCameraPos();
+            MatrixStack matrices = new MatrixStack();
+            MatrixStack.Entry entry = matrices.peek();
+            VertexConsumer consumer = RenderUtil.getLineConsumer(context.consumers());
+
+            if (renderChest) {
+                for (ChestBlockEntity chest : chestList) {
+                    RenderUtil.drawBoxOutline(consumer, entry, cam, chest.getPos(), chestColor, 1.0f);
+                }
             }
 
-            for (EnderChestBlockEntity chest : enderChestList) {
-                if (renderEnderChest)
-                    GizmoDrawing.box(chest.getPos(), DrawStyle.stroked(enderChestColor)).ignoreOcclusion();
+            if (renderEnderChest) {
+                for (EnderChestBlockEntity chest : enderChestList) {
+                    RenderUtil.drawBoxOutline(consumer, entry, cam, chest.getPos(), enderChestColor, 1.0f);
+                }
             }
 
-            for (BarrelBlockEntity chest : barrelList) {
-                if (renderBarrel)
-                    GizmoDrawing.box(chest.getPos(), DrawStyle.stroked(barrelColor)).ignoreOcclusion();
+            if (renderBarrel) {
+                for (BarrelBlockEntity chest : barrelList) {
+                    RenderUtil.drawBoxOutline(consumer, entry, cam, chest.getPos(), barrelColor, 1.0f);
+                }
             }
 
-            for (ShulkerBoxBlockEntity chest : shulkerList) {
-                if (renderShulker)
-                    GizmoDrawing.box(chest.getPos(), DrawStyle.stroked(shulkerColor)).ignoreOcclusion();
+            if (renderShulker) {
+                for (ShulkerBoxBlockEntity chest : shulkerList) {
+                    RenderUtil.drawBoxOutline(consumer, entry, cam, chest.getPos(), shulkerColor, 1.0f);
+                }
             }
-
         });
-
-        menuObject.registerNewFeatureButton(
-                ButtonWidget.builder(
-                        Text.literal("ChestEsp"),
-                        btn -> {
-                            MinecraftClient.getInstance().setScreen(new ChestEspMenu(Menu.INSTANCE));
-                        }).dimensions(100, Menu.INSTANCE.getNextY(), 200, 20).build());
     }
 
     @Override
@@ -184,10 +190,18 @@ public class ChestEsp extends Feature {
         if (client.player == null || client.world == null)
             return;
 
-        chestList.clear();
-        enderChestList.clear();
-        barrelList.clear();
-        shulkerList.clear();
+        if (!this.isEnabled())
+            return;
+
+        scanTime++;
+
+        if (scanTime < scanInterval)
+            return;
+
+        List<ChestBlockEntity> newChests = new ArrayList<>();
+        List<EnderChestBlockEntity> newEnderChests = new ArrayList<>();
+        List<BarrelBlockEntity> newBarrels = new ArrayList<>();
+        List<ShulkerBoxBlockEntity> newShulkers = new ArrayList<>();
 
         int renderDist = client.options.getClampedViewDistance();
         ChunkPos center = client.player.getChunkPos();
@@ -196,44 +210,29 @@ public class ChestEsp extends Feature {
             for (int dz = -renderDist; dz <= renderDist; dz++) {
                 WorldChunk chunk = client.world.getChunkManager()
                         .getWorldChunk(center.x + dx, center.z + dz);
-
                 if (chunk == null)
                     continue;
 
                 for (BlockEntity be : chunk.getBlockEntities().values()) {
                     if (be instanceof ChestBlockEntity chest) {
-
-                        chestList.add(chest);
-
+                        newChests.add(chest);
+                    } else if (be instanceof ShulkerBoxBlockEntity shulker) {
+                        newShulkers.add(shulker);
+                    } else if (be instanceof BarrelBlockEntity barrel) {
+                        newBarrels.add(barrel);
+                    } else if (be instanceof EnderChestBlockEntity enderChest) {
+                        newEnderChests.add(enderChest);
                     }
                 }
-
-                for (BlockEntity be : chunk.getBlockEntities().values()) {
-                    if (be instanceof EnderChestBlockEntity chest) {
-
-                        enderChestList.add(chest);
-
-                    }
-                }
-
-                for (BlockEntity be : chunk.getBlockEntities().values()) {
-                    if (be instanceof BarrelBlockEntity chest) {
-
-                        barrelList.add(chest);
-
-                    }
-                }
-
-                for (BlockEntity be : chunk.getBlockEntities().values()) {
-                    if (be instanceof ShulkerBoxBlockEntity chest) {
-
-                        shulkerList.add(chest);
-
-                    }
-                }
-
             }
         }
+
+        chestList = newChests;
+        enderChestList = newEnderChests;
+        barrelList = newBarrels;
+        shulkerList = newShulkers;
+
+        scanTime = 0;
 
     }
 }

@@ -1,11 +1,40 @@
 package com.moonkitty;
 
 import net.minecraft.client.MinecraftClient;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Feature {
     public int feature_id;
     public String name;
     private boolean enabled;
+    private Category category;
+    protected List<Setting<?>> settings = new ArrayList<>();
+
+    public Feature() {
+        this.category = Category.MISC;
+    }
+
+    public Feature(String name, Category category) {
+        this.name = name;
+        this.category = category;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public List<Setting<?>> getSettings() {
+        return settings;
+    }
+
+    protected void addSetting(Setting<?> setting) {
+        settings.add(setting);
+    }
 
     public boolean isEnabled() {
         return enabled;

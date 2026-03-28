@@ -3,6 +3,8 @@ package com.moonkitty.Features;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.moonkitty.BooleanSetting;
+import com.moonkitty.Category;
 import com.moonkitty.Feature;
 import com.moonkitty.Mixin.CameraAccessor;
 import com.moonkitty.Mixin.FreecamMixin;
@@ -26,8 +28,8 @@ import org.lwjgl.glfw.GLFW;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.MinecraftClient;
 import com.moonkitty.MoonkittyClient;
-import com.moonkitty.Features.Menu.TriggerBotMenu;
-import com.moonkitty.Features.Menu.companionMenu;
+import com.moonkitty.NumberSetting;
+
 import com.moonkitty.Gui.Menu;
 
 import net.minecraft.util.Identifier;
@@ -72,6 +74,8 @@ public class companion extends Feature {
     int width = 64;
     int height = 64;
 
+    MinecraftClient client;
+
     public void setX(int value) {
         x = value;
     }
@@ -96,14 +100,28 @@ public class companion extends Feature {
         speed = value;
     }
 
+    private NumberSetting speedSetting;
+    private NumberSetting xSetting;
+    private NumberSetting ySetting;
+
     public companion() {
         this.name = "Companion";
         this.feature_id = 6;
+        this.setCategory(Category.MISC);
         this.setEnabled(false);
+
+        speedSetting = new NumberSetting("Speed (in ticks)", 3.0, 1.0, 10.0, 1.0);
+        addSetting(speedSetting);
+
+        xSetting = new NumberSetting("X", 100.0, 0.0, 1920.0, 1.0);
+        addSetting(xSetting);
+
+        ySetting = new NumberSetting("Y", 100.0, 0.0, 1080.0, 1.0);
+        addSetting(ySetting);
     }
 
     private NativeImageBackedTexture convertFrame(BufferedImage img, int index) {
-        MinecraftClient client = MinecraftClient.getInstance();
+        client = MinecraftClient.getInstance();
         int width = img.getWidth();
         int height = img.getHeight();
 
@@ -175,13 +193,6 @@ public class companion extends Feature {
     public void init() {
         Menu menuObject = Menu.INSTANCE;
 
-        menuObject.registerNewFeatureButton(
-                ButtonWidget.builder(
-                        Text.literal("Companion"),
-                        btn -> {
-                            MinecraftClient.getInstance().setScreen(new companionMenu(Menu.INSTANCE));
-                        }).dimensions(100, Menu.INSTANCE.getNextY(), 200, 20).build());
-
         HudRenderCallback.EVENT.register(
                 (DrawContext drawContext, net.minecraft.client.render.RenderTickCounter tickDeltaManager) -> {
                     if (!this.isEnabled())
@@ -209,6 +220,10 @@ public class companion extends Feature {
 
     @Override
     public void tick(MinecraftClient client) {
+        speed = speedSetting.getValue().intValue();
+        x = xSetting.getValue().intValue();
+        y = ySetting.getValue().intValue();
+
         if (textures == null)
             return;
 

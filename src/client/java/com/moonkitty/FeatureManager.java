@@ -21,6 +21,9 @@ import com.moonkitty.Features.Search;
 import com.moonkitty.Features.Combat.Criticals;
 import com.moonkitty.Features.Combat.StrafeAura;
 import com.moonkitty.Features.StashFinder;
+import com.moonkitty.Features.Scaffold;
+import com.moonkitty.Features.AutoTunneler;
+import com.moonkitty.Features.Combat.TrapAura;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +46,9 @@ public class FeatureManager {
     private final Criticals criticalsFeature;
     private final StrafeAura strafeFeature;
     private final StashFinder stashFinderFeature;
+    private final Scaffold scaffoldFeature;
+    private final AutoTunneler autoTunnelerFeature;
+    private final TrapAura trapAuraFeature;
     MinecraftClient client;
 
     public static final FeatureManager INSTANCE = new FeatureManager();
@@ -67,6 +73,9 @@ public class FeatureManager {
         this.criticalsFeature = new Criticals();
         this.strafeFeature = new StrafeAura();
         this.stashFinderFeature = new StashFinder();
+        this.scaffoldFeature = new Scaffold();
+        this.autoTunnelerFeature = new AutoTunneler();
+        this.trapAuraFeature = new TrapAura();
 
         featureList.add(espFeature);
         featureList.add(freecamFeature);
@@ -85,6 +94,9 @@ public class FeatureManager {
         featureList.add(criticalsFeature);
         featureList.add(strafeFeature);
         featureList.add(stashFinderFeature);
+        featureList.add(scaffoldFeature);
+        featureList.add(autoTunnelerFeature);
+        featureList.add(trapAuraFeature);
     }
 
     public esp getEspFeature() {
@@ -93,6 +105,18 @@ public class FeatureManager {
 
     public StashFinder getStashFinderFeature() {
         return stashFinderFeature;
+    }
+
+    public Scaffold getScaffoldFeature() {
+        return scaffoldFeature;
+    }
+
+    public AutoTunneler getAutoTunnelerFeature() {
+        return autoTunnelerFeature;
+    }
+
+    public TrapAura getTrapAuraFeature() {
+        return trapAuraFeature;
     }
 
     public Criticals getCritsFeature() {

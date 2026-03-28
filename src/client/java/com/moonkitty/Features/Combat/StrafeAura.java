@@ -3,9 +3,11 @@ package com.moonkitty.Features.Combat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.moonkitty.BooleanSetting;
+import com.moonkitty.Category;
 import com.moonkitty.Feature;
 import com.moonkitty.MoonkittyClient;
-import com.moonkitty.Features.Menu.StrafeAuraMenu;
+import com.moonkitty.NumberSetting;
 import com.moonkitty.Gui.Menu;
 
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
@@ -65,18 +67,16 @@ public class StrafeAura extends Feature {
     public float minTargetDistance = 6f;
     public float maxDist = 2f;
     public float minDist = 0.2f;
-
-    public float strength = 0.8f;
-
+    public float strength = 2f;
     public float maxY = 1f;
-
     private int randomTickCounter = 0;
-
     private Vec3d randomDirection = Vec3d.ZERO;
-
     public int changeRate = 10;
-
     public boolean cancelVelocity = true;
+
+    private BooleanSetting cancelVelocitySetting;
+    private NumberSetting radiusSetting;
+    private NumberSetting strengthSetting;
 
     public float getMaxDist() {
         return maxDist;
@@ -111,20 +111,23 @@ public class StrafeAura extends Feature {
     public StrafeAura() {
         this.name = "Strafe Aura";
         this.feature_id = 323;
+        this.setCategory(Category.COMBAT);
         this.setEnabled(false);
+
+        cancelVelocitySetting = new BooleanSetting("Cancel External Velocity", true);
+        addSetting(cancelVelocitySetting);
+
+        radiusSetting = new NumberSetting("Radius", 2.0, 1.0, 5.0, 0.5);
+        addSetting(radiusSetting);
+
+        strengthSetting = new NumberSetting("Strength", 2.0, 1.0, 5.0, 0.5);
+        addSetting(strengthSetting);
     }
 
     @Override
     public void init() {
         client = MinecraftClient.getInstance();
         Menu menuObject = Menu.INSTANCE;
-
-        menuObject.registerNewFeatureButton(
-                ButtonWidget.builder(
-                        Text.literal("Strafe Aura"),
-                        btn -> {
-                            MinecraftClient.getInstance().setScreen(new StrafeAuraMenu(Menu.INSTANCE));
-                        }).dimensions(100, Menu.INSTANCE.getNextY(), 200, 20).build());
 
         KillAuraHud.init();
 
@@ -139,6 +142,10 @@ public class StrafeAura extends Feature {
 
         if (!isEnabled() || client.player == null || client.world == null)
             return;
+
+        cancelVelocity = cancelVelocitySetting.getValue();
+        maxDist = radiusSetting.getValue().floatValue();
+        strength = strengthSetting.getValue().floatValue();
 
         for (AbstractClientPlayerEntity player : client.world.getPlayers()) {
 

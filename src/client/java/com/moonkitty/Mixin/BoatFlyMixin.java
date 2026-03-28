@@ -46,7 +46,7 @@ public abstract class BoatFlyMixin {
         BoatFly boat_feature = FeatureManager.INSTANCE.getBoatFlyFeature();
 
         double yawRad = Math.toRadians(client.player.getYaw());
-        double speed = boat_feature.getSpeed();
+        double speed = boat_feature.speed;
 
         if (!boat_feature.isEnabled())
             return;
@@ -60,7 +60,7 @@ public abstract class BoatFlyMixin {
         double newX = vehicle.getX() + dx;
         double newZ = vehicle.getZ() + dz;
 
-        double targetY = boat_feature.getTargetY();
+        double targetY = boat_feature.targetY;
         if (Double.isNaN(targetY)) {
             targetY = vehicle.getY();
         }
@@ -71,14 +71,14 @@ public abstract class BoatFlyMixin {
             targetY -= 0.5;
         } else {
 
-            double fallSpeed = boat_feature.getFallSpeed();
+            double fallSpeed = boat_feature.fallSpeed;
             if (fallSpeed > 0.0) {
                 double perTickFall = fallSpeed / 20.0;
                 targetY -= perTickFall;
             }
         }
 
-        boat_feature.setTargetY(targetY);
+        boat_feature.targetY = targetY;
 
         double newY = targetY;
         double packetY = newY;

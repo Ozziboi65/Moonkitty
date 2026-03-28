@@ -3,8 +3,8 @@ package com.moonkitty.Features;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.moonkitty.Category;
 import com.moonkitty.Feature;
-import com.moonkitty.Features.Menu.StashFinderMenu;
 
 import net.minecraft.block.entity.*;
 import net.minecraft.client.MinecraftClient;
@@ -23,16 +23,8 @@ import net.minecraft.util.math.Vec3d;
 import com.moonkitty.Features.StashFinderChunk;
 import com.moonkitty.FeatureManager;
 import com.moonkitty.Features.esp;
-import com.moonkitty.Features.Menu.freecamMenu;
-import com.moonkitty.Features.Menu.EspMenu;
 import com.moonkitty.Features.fakeplayer;
-import com.moonkitty.Features.Menu.worldchangerMenu;
 import com.moonkitty.Features.companion;
-import com.moonkitty.Features.Menu.companionMenu;
-import com.moonkitty.Features.Menu.BlinkMenu;
-import com.moonkitty.Features.Menu.TriggerBotMenu;
-
-import com.moonkitty.Features.Menu.EspMenu;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
 import net.fabricmc.fabric.api.client.gametest.v1.screenshot.TestScreenshotComparisonOptions;
@@ -61,6 +53,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.moonkitty.BooleanSetting;
+import com.moonkitty.ButtonSetting;
+import com.moonkitty.NumberSetting;
+import com.moonkitty.Category;
+
 public class StashFinder extends Feature {
     public static final Logger LOGGER = LoggerFactory.getLogger("moonkitty");
     public MinecraftClient mcClient;
@@ -71,10 +68,21 @@ public class StashFinder extends Feature {
     public float detectSoundVolume = 67;
     public int minBlockEntityCount = 6;
 
+    private NumberSetting minBlockEntity;
+
     public StashFinder() {
         this.name = "StashFinder";
         this.feature_id = 647;
+        this.setCategory(Category.WORLD);
         this.setEnabled(true);
+
+        minBlockEntity = new NumberSetting("Min BlockEnities", 6.0, 1.0, 12.0, 1);
+        addSetting(minBlockEntity);
+
+        addSetting(new ButtonSetting("Clear Cache", () -> {
+            clearAllCache();
+        }));
+
     }
 
     public void clearAllCache() {
@@ -88,37 +96,12 @@ public class StashFinder extends Feature {
         this.mcClient = MinecraftClient.getInstance();
         Menu menuObject = Menu.INSTANCE;
 
-        menuObject.registerNewFeatureButton(
-                ButtonWidget.builder(
-                        Text.literal("StashFinder"),
-                        btn -> {
-                            MinecraftClient.getInstance().setScreen(new StashFinderMenu(Menu.INSTANCE));
-                        }).dimensions(100, Menu.INSTANCE.getNextY(), 200, 20).build());
-
         ClientChunkEvents.CHUNK_UNLOAD.register((world, chunk) -> {
             ChunkPos unloadedChunk = chunk.getPos();
             scannedChunks.remove(unloadedChunk);
 
             tracerTargets.removeIf(blockPos -> new ChunkPos(blockPos).equals(unloadedChunk));
         });
-
-        WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> {
-            if (!isEnabled() || mcClient.player == null || mcClient.world == null)
-                return;
-
-            float frameTickDelta = mcClient.gameRenderer.getCamera().getLastTickProgress();
-
-            Vec3d origin = mcClient.player.getLerpedPos(frameTickDelta);
-            origin.add(0, 0.9, 0);
-
-            for (BlockPos block : tracerTargets) {
-
-                Vec3d targetPos = new Vec3d(block.getX(), block.getY(), block.getZ());
-
-                GizmoDrawing.line(origin, targetPos, 0xFF00ffe5, 4).ignoreOcclusion();
-            }
-        });
-
     }
 
     @Override
@@ -127,18 +110,20 @@ public class StashFinder extends Feature {
         if (client.player == null || client.world == null)
             return;
 
+        minBlockEntityCount = minBlockEntity.getValue().intValue();
+
         int renderDist = client.options.getClampedViewDistance();
         ChunkPos center = client.player.getChunkPos();
 
         for (int dx = -renderDist; dx <= renderDist; dx++) {
             for (int dz = -renderDist; dz <= renderDist; dz++) {
-                WorldChunk chunk = client.world.getChunkManager()
-                        .getWorldChunk(center.x + dx, center.z + dz);
-
                 ChunkPos cp = new ChunkPos(center.x + dx, center.z + dz);
 
                 if (scannedChunks.contains(cp))
                     continue;
+
+                WorldChunk chunk = client.world.getChunkManager()
+                        .getWorldChunk(center.x + dx, center.z + dz);
 
                 if (chunk == null)
                     continue;
@@ -181,8 +166,6 @@ public class StashFinder extends Feature {
                     client.inGameHud.getChatHud().addMessage(
                             Text.literal("[MOONKITTY] [STASH FINDER] sus Chunk found, chunkPos: " + cp
                                     + " ,BlockEntity Count: " + blockCount));
-
-                    System.out.println("Chunk " + cp + " blockEntity count: " + blockCount);
                 }
 
                 scannedChunks.add(cp);

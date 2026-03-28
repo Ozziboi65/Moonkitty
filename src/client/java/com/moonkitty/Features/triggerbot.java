@@ -3,16 +3,17 @@ package com.moonkitty.Features;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.moonkitty.BooleanSetting;
+import com.moonkitty.Category;
 import com.moonkitty.Feature;
 import com.moonkitty.MoonkittyClient;
-import com.moonkitty.Features.Menu.TriggerBotMenu;
+import com.moonkitty.NumberSetting;
 import com.moonkitty.Gui.Menu;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.world.World;
 import net.minecraft.text.Text;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -35,8 +36,10 @@ public class triggerbot extends Feature {
     long lastAttackTime = 0;
 
     Robot robot;
-
     boolean simClick;
+
+    private NumberSetting delaySetting;
+    private BooleanSetting simClickSetting;
 
     public void setAttackDelayMs(int delay) {
         attackDelay = delay;
@@ -47,9 +50,15 @@ public class triggerbot extends Feature {
     }
 
     public triggerbot() {
-        this.name = "TRIGGERBOT";
+        this.name = "Triggerbot";
+        this.setCategory(Category.COMBAT);
         this.feature_id = 45;
         this.setEnabled(false);
+
+        delaySetting = new NumberSetting("Delay", 1000.0, 0.0, 1000.0, 10.0);
+        addSetting(delaySetting);
+        simClickSetting = new BooleanSetting("Simulate Click", false);
+        addSetting(simClickSetting);
     }
 
     public void setEnabledSimClick(boolean enabled) {
@@ -77,12 +86,6 @@ public class triggerbot extends Feature {
             e.printStackTrace();
         }
 
-        menuObject.registerNewFeatureButton(
-                ButtonWidget.builder(
-                        Text.literal("Triggerbot"),
-                        btn -> {
-                            MinecraftClient.getInstance().setScreen(new TriggerBotMenu(Menu.INSTANCE));
-                        }).dimensions(100, Menu.INSTANCE.getNextY(), 200, 20).build());
     }
 
     @Override
@@ -90,6 +93,9 @@ public class triggerbot extends Feature {
 
         if (!this.isEnabled())
             return;
+
+        attackDelay = delaySetting.getValue().intValue();
+        simClick = simClickSetting.getValue();
 
         HitResult target = client.crosshairTarget;
 

@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.moonkitty.Gui.Hud;
 import com.moonkitty.Gui.Menu;
+import com.moonkitty.Gui.ClickGui;
 import com.moonkitty.Util.ConfigUtil;
 import com.moonkitty.Util.FileIO;
 
@@ -19,6 +20,7 @@ import com.moonkitty.Features.esp;
 import com.moonkitty.Feature;
 
 import com.moonkitty.FeatureManager;
+import com.moonkitty.bot.BotActions;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
@@ -35,7 +37,7 @@ import net.minecraft.util.Identifier;
 public class MoonkittyClient implements ClientModInitializer {
         public static final String MOD_ID = "moonkitty";
         public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-        public MinecraftClient McClient;
+        public MinecraftClient mcClient;
 
         public static final KeyBinding.Category MOONKITTY_CATEGORY = KeyBinding.Category.create(
                         Identifier.of("moonkitty", "main"));
@@ -55,13 +57,13 @@ public class MoonkittyClient implements ClientModInitializer {
         @Override
         public void onInitializeClient() {
                 LOGGER.info("Meow :3 ");
-                McClient = MinecraftClient.getInstance();
+                mcClient = MinecraftClient.getInstance();
 
                 new Menu(null);
 
-                if (McClient == null) {
+                if (mcClient == null) {
                         LOGGER.warn("Mc Instance is null, maybe not loaded? :(");
-                        McClient = MinecraftClient.getInstance();
+                        mcClient = MinecraftClient.getInstance();
                 }
 
                 FeatureManager.INSTANCE.Init();
@@ -77,12 +79,11 @@ public class MoonkittyClient implements ClientModInitializer {
                         if (OPEN_GUI.wasPressed()) {
                                 LOGGER.info("Menu Key Triggered");
 
-                                McClient.setScreen(
-                                                new Menu(McClient.currentScreen));
+                                mcClient.setScreen(
+                                                new ClickGui());
                         }
 
                         FeatureManager.INSTANCE.tick(client);
-
                 });
 
         }

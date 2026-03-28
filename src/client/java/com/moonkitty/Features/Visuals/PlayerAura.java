@@ -1,7 +1,7 @@
 package com.moonkitty.Features.Visuals;
 
+import com.moonkitty.Category;
 import com.moonkitty.Feature;
-import com.moonkitty.Features.Menu.PlayerAuraMenu;
 import com.moonkitty.Gui.Menu;
 
 import net.minecraft.client.MinecraftClient;
@@ -30,6 +30,7 @@ public class PlayerAura extends Feature {
     public PlayerAura() {
         this.name = "Particle Aura";
         this.feature_id = 76;
+        this.setCategory(Category.RENDER);
         this.setEnabled(true);
     }
 
@@ -44,13 +45,6 @@ public class PlayerAura extends Feature {
     @Override
     public void init() {
         Menu menuObject = Menu.INSTANCE;
-
-        menuObject.registerNewFeatureButton(
-                ButtonWidget.builder(
-                        Text.literal("Particle Aura"),
-                        btn -> {
-                            MinecraftClient.getInstance().setScreen(new PlayerAuraMenu(Menu.INSTANCE));
-                        }).dimensions(100, Menu.INSTANCE.getNextY(), 200, 20).build());
 
     }
 

@@ -3,8 +3,11 @@ package com.moonkitty.Features.Combat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.moonkitty.BooleanSetting;
+import com.moonkitty.ButtonSetting;
+import com.moonkitty.Category;
 import com.moonkitty.Feature;
-import com.moonkitty.Features.Menu.KillAuraMenu;
+import com.moonkitty.NumberSetting;
 import com.moonkitty.Gui.Menu;
 import com.moonkitty.Util.ConfigUtil;
 import com.moonkitty.Features.Combat.KillAuraHud;
@@ -28,6 +31,12 @@ public class KillAura extends Feature {
     public static final Logger LOGGER = LoggerFactory.getLogger("moonkitty");
     public static MinecraftClient McClient;
 
+    private NumberSetting reachSetting;
+    private NumberSetting delaySetting;
+    private BooleanSetting swingSetting;
+    private BooleanSetting visibleSetting;
+    private BooleanSetting readySetting;
+
     public float reach = 6;
 
     public int attackDelay = 200;
@@ -36,6 +45,7 @@ public class KillAura extends Feature {
     public boolean swingHand;
     public boolean checkVisible;
     public boolean lookAtTarget = true;
+    public boolean attackWhenReady;
 
     public float[] rot;
 
@@ -44,7 +54,21 @@ public class KillAura extends Feature {
     public KillAura() {
         this.name = "Kill Aura";
         this.feature_id = 353;
+        this.setCategory(Category.COMBAT);
         this.setEnabled(false);
+
+        // Initialize settings
+        reachSetting = new NumberSetting("Reach", 6.0, 3.0, 10.0, 0.5);
+        delaySetting = new NumberSetting("Delay", 200.0, 0.0, 1000.0, 50.0);
+        swingSetting = new BooleanSetting("Swing", false);
+        visibleSetting = new BooleanSetting("Check Visible", false);
+        readySetting = new BooleanSetting("Attack When Ready", true);
+
+        addSetting(reachSetting);
+        addSetting(delaySetting);
+        addSetting(swingSetting);
+        addSetting(visibleSetting);
+        addSetting(readySetting);
     }
 
     public void setReach(float newReach) {
@@ -98,13 +122,6 @@ public class KillAura extends Feature {
 
         rot = new float[2];
 
-        menuObject.registerNewFeatureButton(
-                ButtonWidget.builder(
-                        Text.literal("Kill Aura"),
-                        btn -> {
-                            MinecraftClient.getInstance().setScreen(new KillAuraMenu(Menu.INSTANCE));
-                        }).dimensions(100, Menu.INSTANCE.getNextY(), 200, 20).build());
-
         KillAuraHud.init();
 
         this.reach = (float) ConfigUtil.getDouble("killAura.range", this.reach);
@@ -115,6 +132,12 @@ public class KillAura extends Feature {
 
     @Override
     public void tick(MinecraftClient client) {
+        // Update values from settings
+        reach = reachSetting.getValue().floatValue();
+        attackDelay = delaySetting.getValue().intValue();
+        swingHand = swingSetting.getValue();
+        checkVisible = visibleSetting.getValue();
+        attackWhenReady = readySetting.getValue();
 
         if (!isEnabled() || client.player == null || McClient.world == null)
             return;
@@ -163,20 +186,34 @@ public class KillAura extends Feature {
 
             KillAuraHud.target = player;
 
-            long now = System.currentTimeMillis();
-            if (now - lastAttackTime >= attackDelay) {
-                if (swingHand) {
-                    client.player.swingHand(Hand.MAIN_HAND);
+            if (attackWhenReady) {
+                float delay = client.player.getAttackCooldownProgress(0.5f);
+                if (delay >= 1.0f) {
+                    attackPlayer(player);
+                    continue;
                 }
 
-                client.getNetworkHandler().sendPacket(new HandSwingC2SPacket(Hand.MAIN_HAND));
-                client.getNetworkHandler().sendPacket(
-                        PlayerInteractEntityC2SPacket.attack(player, client.player.isSneaking()));
+                continue;
+            }
 
+            long now = System.currentTimeMillis();
+            if (now - lastAttackTime >= attackDelay) {
+                attackPlayer(player);
                 lastAttackTime = now;
             }
             return;
         }
+    }
+
+    public void attackPlayer(AbstractClientPlayerEntity target) {
+
+        if (swingHand) {
+            MinecraftClient.getInstance().player.swingHand(Hand.MAIN_HAND);
+        }
+
+        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new HandSwingC2SPacket(Hand.MAIN_HAND));
+        MinecraftClient.getInstance().interactionManager.attackEntity(MinecraftClient.getInstance().player, target);
+
     }
 
     public static float[] getRotationForAim(ClientPlayerEntity player, Entity target) {

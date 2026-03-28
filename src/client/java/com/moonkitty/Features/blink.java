@@ -3,6 +3,8 @@ package com.moonkitty.Features;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.moonkitty.BooleanSetting;
+import com.moonkitty.Category;
 import com.moonkitty.Feature;
 import com.moonkitty.Mixin.CameraAccessor;
 import net.minecraft.client.render.Camera;
@@ -27,8 +29,10 @@ import org.lwjgl.glfw.GLFW;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.MinecraftClient;
 import com.moonkitty.MoonkittyClient;
+import com.moonkitty.NumberSetting;
+
 import net.minecraft.util.Identifier;
-import com.moonkitty.Features.Menu.BlinkMenu;
+
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
@@ -45,7 +49,6 @@ public class blink extends Feature {
     public static final Logger LOGGER = LoggerFactory.getLogger("moonkitty");
 
     public boolean initialized = false;
-
     public boolean shouldCancelPacket;
 
     int tickCounter;
@@ -58,6 +61,9 @@ public class blink extends Feature {
     MinecraftClient mc = MinecraftClient.getInstance();
 
     public Box lastHitBox;
+
+    private NumberSetting tickTimeSetting;
+    private NumberSetting tickCancelTimeSetting;
 
     @Override
     protected void onEnable() {
@@ -85,21 +91,19 @@ public class blink extends Feature {
     public blink() {
         this.name = "Blink";
         this.feature_id = 7;
+        this.setCategory(Category.MOVEMENT);
         this.setEnabled(false);
 
+        tickTimeSetting = new NumberSetting("interval(ticks)", 4.0, 1.0, 20.0, 1.0);
+        addSetting(tickTimeSetting);
+        tickCancelTimeSetting = new NumberSetting("cancel time(ticks)", 2.0, 1.0, 10.0, 1.0);
+        addSetting(tickCancelTimeSetting);
     }
 
     @Override
     public void init() {
 
         Menu menuObject = Menu.INSTANCE;
-
-        menuObject.registerNewFeatureButton(
-                ButtonWidget.builder(
-                        Text.literal("Blink"),
-                        btn -> {
-                            MinecraftClient.getInstance().setScreen(new BlinkMenu(Menu.INSTANCE));
-                        }).dimensions(100, Menu.INSTANCE.getNextY(), 200, 20).build());
 
         WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> {
             if (!this.isEnabled())
@@ -128,6 +132,8 @@ public class blink extends Feature {
 
             this.toggle();
         }
+        tickTime = tickTimeSetting.getValue().intValue();
+        tickCancelTime = tickCancelTimeSetting.getValue().intValue();
 
         if (lastHitBox == null && client.player != null) {
             lastHitBox = client.player.getBoundingBox();

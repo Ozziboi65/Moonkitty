@@ -3,6 +3,8 @@ package com.moonkitty.Features;
 import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
+import com.moonkitty.ButtonSetting;
+import com.moonkitty.Category;
 import com.moonkitty.Feature;
 import com.moonkitty.Gui.Menu;
 
@@ -20,18 +22,18 @@ public class fakeplayer extends Feature {
     public fakeplayer() {
         this.name = "FakePlayer";
         this.feature_id = 88;
+        this.setCategory(Category.MISC);
+
+        addSetting(new ButtonSetting("Spawn", () -> {
+            spawnPlayer();
+        }));
+
     }
 
     @Override
     public void init() {
         Menu menuObject = Menu.INSTANCE;
 
-        menuObject.registerNewFeatureButton(
-                ButtonWidget.builder(
-                        Text.literal("FakePlayer"),
-                        btn -> {
-                            this.spawnPlayer();
-                        }).dimensions(100, Menu.INSTANCE.getNextY(), 200, 20).build());
     }
 
     public void spawnPlayer() {

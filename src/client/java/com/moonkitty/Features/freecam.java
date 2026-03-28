@@ -3,7 +3,10 @@ package com.moonkitty.Features;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.moonkitty.BooleanSetting;
+import com.moonkitty.Category;
 import com.moonkitty.Feature;
+import com.moonkitty.NumberSetting;
 import com.moonkitty.Mixin.CameraAccessor;
 import com.moonkitty.Mixin.FreecamMixin;
 import net.minecraft.client.render.Camera;
@@ -19,7 +22,6 @@ import org.lwjgl.glfw.GLFW;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.MinecraftClient;
 import com.moonkitty.MoonkittyClient;
-import com.moonkitty.Features.Menu.freecamMenu;
 import com.moonkitty.Gui.Menu;
 
 import net.minecraft.util.Identifier;
@@ -30,6 +32,9 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 public class freecam extends Feature {
     public static final Logger LOGGER = LoggerFactory.getLogger("moonkitty");
     public MinecraftClient McClient;
+
+    private NumberSetting speedSetting;
+    private BooleanSetting optimiseSetting;
 
     private World world;
 
@@ -78,23 +83,29 @@ public class freecam extends Feature {
     public freecam() {
         this.name = "Freecam";
         this.feature_id = 2;
+        this.setCategory(Category.MOVEMENT);
         this.setEnabled(false);
+
+        // Initialize settings
+        speedSetting = new NumberSetting("Speed", 0.5, 0.1, 5.0, 0.1);
+        optimiseSetting = new BooleanSetting("Optimise", true);
+
+        addSetting(speedSetting);
+        addSetting(optimiseSetting);
     }
 
     @Override
     public void init() {
         Menu menuObject = Menu.INSTANCE;
 
-        menuObject.registerNewFeatureButton(
-                ButtonWidget.builder(
-                        Text.literal("Freecam"),
-                        btn -> {
-                            MinecraftClient.getInstance().setScreen(new freecamMenu(Menu.INSTANCE));
-                        }).dimensions(100, Menu.INSTANCE.getNextY(), 200, 20).build());
     }
 
     @Override
     public void tick(MinecraftClient client) {
+        // Update values from settings
+        speed = speedSetting.getValue().floatValue();
+        optimise = optimiseSetting.getValue();
+
         if (MoonkittyClient.TOGGLE_FREECAM.wasPressed()) {
             LOGGER.info("Toggle Free cam bind pressed");
 

@@ -3,8 +3,8 @@ package com.moonkitty.Features;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.moonkitty.Category;
 import com.moonkitty.Feature;
-import com.moonkitty.Features.Menu.EspMenu;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.world.World;
@@ -16,16 +16,11 @@ import com.moonkitty.Feature;
 import com.moonkitty.FeatureManager;
 import com.moonkitty.MoonkittyClient;
 import com.moonkitty.Features.esp;
-import com.moonkitty.Features.Menu.ChestEspMenu;
-import com.moonkitty.Features.Menu.EspMenu;
-import com.moonkitty.Features.fakeplayer;
-import com.moonkitty.Features.Menu.worldchangerMenu;
-import com.moonkitty.Features.companion;
-import com.moonkitty.Features.Menu.companionMenu;
-import com.moonkitty.Features.Menu.SearchMenu;
-import com.moonkitty.Features.Menu.TriggerBotMenu;
 
-import com.moonkitty.Features.Menu.EspMenu;
+import com.moonkitty.Features.fakeplayer;
+
+import com.moonkitty.Features.companion;
+
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.Window;
@@ -72,6 +67,7 @@ public class Search extends Feature {
     public Search() {
         this.name = "Search";
         this.feature_id = 58;
+        this.setCategory(Category.WORLD);
         this.setEnabled(false);
     }
 
@@ -101,12 +97,6 @@ public class Search extends Feature {
 
         });
 
-        menuObject.registerNewFeatureButton(
-                ButtonWidget.builder(
-                        Text.literal("Search"),
-                        btn -> {
-                            MinecraftClient.getInstance().setScreen(new SearchMenu(Menu.INSTANCE));
-                        }).dimensions(100, Menu.INSTANCE.getNextY(), 200, 20).build());
     }
 
     @Override

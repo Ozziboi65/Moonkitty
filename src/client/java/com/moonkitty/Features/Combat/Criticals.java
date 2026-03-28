@@ -3,8 +3,8 @@ package com.moonkitty.Features.Combat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.moonkitty.Category;
 import com.moonkitty.Feature;
-import com.moonkitty.Features.Menu.EspMenu;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.world.World;
@@ -16,16 +16,7 @@ import com.moonkitty.Feature;
 import com.moonkitty.FeatureManager;
 import com.moonkitty.MoonkittyClient;
 import com.moonkitty.Features.esp;
-import com.moonkitty.Features.Menu.CritsMenu;
-import com.moonkitty.Features.Menu.EspMenu;
-import com.moonkitty.Features.fakeplayer;
-import com.moonkitty.Features.Menu.worldchangerMenu;
-import com.moonkitty.Features.companion;
-import com.moonkitty.Features.Menu.companionMenu;
-import com.moonkitty.Features.Menu.BlinkMenu;
-import com.moonkitty.Features.Menu.TriggerBotMenu;
 
-import com.moonkitty.Features.Menu.EspMenu;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.Window;
@@ -61,6 +52,7 @@ public class Criticals extends Feature {
     public Criticals() {
         this.name = "Criticals";
         this.feature_id = 5758;
+        this.setCategory(Category.COMBAT);
         this.setEnabled(false);
     }
 
@@ -99,12 +91,6 @@ public class Criticals extends Feature {
         this.McClient = MinecraftClient.getInstance();
         Menu menuObject = Menu.INSTANCE;
 
-        menuObject.registerNewFeatureButton(
-                ButtonWidget.builder(
-                        Text.literal("Criticals"),
-                        btn -> {
-                            MinecraftClient.getInstance().setScreen(new CritsMenu(Menu.INSTANCE));
-                        }).dimensions(100, Menu.INSTANCE.getNextY(), 200, 20).build());
     }
 
     @Override

@@ -28,7 +28,6 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.MinecraftClient;
 import com.moonkitty.MoonkittyClient;
 import net.minecraft.util.Identifier;
-import com.moonkitty.Features.Menu.BlinkMenu;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -39,7 +38,6 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.moonkitty.Features.Menu.KillAuraMenu;
 import com.moonkitty.Gui.Menu;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;

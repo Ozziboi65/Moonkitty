@@ -11,7 +11,8 @@
 		"BoatFlyMixin",
 		"CriticalsMixin",
 		"setPacketRotMixin",
-		"IPlayerMoveC2SPacket"
+		"IPlayerMoveC2SPacket",
+		"RenderLayerAccessor"
 	],
 	"injectors": {
 		"defaultRequire": 1

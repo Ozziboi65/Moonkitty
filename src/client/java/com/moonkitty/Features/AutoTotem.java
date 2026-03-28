@@ -11,9 +11,11 @@ import com.moonkitty.Gui.Menu;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 
+import com.moonkitty.BooleanSetting;
+import com.moonkitty.Category;
 import com.moonkitty.Feature;
 import com.moonkitty.FeatureManager;
-import com.moonkitty.Features.Menu.AutoTotemMenu;
+import com.moonkitty.NumberSetting;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.gui.screen.Screen;
@@ -40,13 +42,21 @@ public class AutoTotem extends Feature {
     int pendingHandlerSlot = -1;
 
     int delay = 200;
+    private NumberSetting delaySetting;
+    private BooleanSetting containerSetting;
 
     public boolean disableInContainers = true;
 
     public AutoTotem() {
         this.name = "AutoTotem";
         this.feature_id = 4567;
+        this.setCategory(Category.COMBAT);
         this.setEnabled(true);
+
+        delaySetting = new NumberSetting("Delay", 200.0, 0.0, 1000.0, 50.0);
+        containerSetting = new BooleanSetting("Disable In Containers", false);
+        addSetting(delaySetting);
+        addSetting(containerSetting);
     }
 
     public boolean getDisableContainer() {
@@ -68,12 +78,6 @@ public class AutoTotem extends Feature {
         this.McClient = MinecraftClient.getInstance();
         Menu menuObject = Menu.INSTANCE;
 
-        menuObject.registerNewFeatureButton(
-                ButtonWidget.builder(
-                        Text.literal("Auto Totem"),
-                        btn -> {
-                            MinecraftClient.getInstance().setScreen(new AutoTotemMenu(Menu.INSTANCE));
-                        }).dimensions(100, Menu.INSTANCE.getNextY(), 200, 20).build());
     }
 
     @Override
@@ -90,6 +94,9 @@ public class AutoTotem extends Feature {
         if (client.currentScreen instanceof HandledScreen<?> && disableInContainers) {
             return;
         }
+
+        disableInContainers = containerSetting.getValue();
+        delay = delaySetting.getValue().intValue();
 
         long now = System.currentTimeMillis();
         int invSlot = -1;
