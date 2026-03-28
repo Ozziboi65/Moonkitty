@@ -1,40 +1,11 @@
 # Moonkitty
 **Minecraft Hacked Client Made Specfically To Be Minimal And For Vanilla**
 
-# [Moonkitty Homepage](https://sigmacat123.com/moonkitty/moonkitty.html)
+![logo](logo.png)
+
+# [Moonkitty Homepage](https://client.sigmacat123.com)
 
 # Works with FeatherClient and most Fabric clients/launchers
-
-# Current Features:
-  Esp (player, items and hostile mobs) 
-  
-  Container Esp
-  
-  WorldChanger
-  
-  Tracers (broken)
-  
-  Companion Gif
-  
-  TriggerBot
-  
-  Freecam / DebugCam
-  
-  Blink
-
-  Boat-Fly
-
-  AutoTotem
-
-  KillAura
-
-  Search
-
-  Particle Aura
-
-  HackList
-
-  StashFinder
   
 
 # ScreenShots:
