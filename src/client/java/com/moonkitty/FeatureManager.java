@@ -13,6 +13,7 @@ import com.moonkitty.Features.companion;
 import com.moonkitty.Features.blink;
 import com.moonkitty.Features.triggerbot;
 import com.moonkitty.Features.ChestEsp;
+import com.moonkitty.Features.FastUse;
 import com.moonkitty.Features.BoatFly;
 import com.moonkitty.Features.AutoTotem;
 import com.moonkitty.Features.Visuals.PlayerAura;
@@ -26,6 +27,7 @@ import com.moonkitty.Features.AutoTunneler;
 import com.moonkitty.Features.Combat.TrapAura;
 import com.moonkitty.Features.Combat.CrystalAura;
 import com.moonkitty.Features.InventoryTweaks;
+import com.moonkitty.Features.Flight;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +55,8 @@ public class FeatureManager {
     private final TrapAura trapAuraFeature;
     private final CrystalAura crystalAuraFeature;
     private final InventoryTweaks inventoryTweaksFeature;
+    private final FastUse fastUseFeature;
+    private final Flight flightFeature;
     MinecraftClient client;
 
     public static final FeatureManager INSTANCE = new FeatureManager();
@@ -82,6 +86,8 @@ public class FeatureManager {
         this.trapAuraFeature = new TrapAura();
         this.crystalAuraFeature = new CrystalAura();
         this.inventoryTweaksFeature = new InventoryTweaks();
+        this.fastUseFeature = new FastUse();
+        this.flightFeature = new Flight();
 
         featureList.add(espFeature);
         featureList.add(freecamFeature);
@@ -105,14 +111,24 @@ public class FeatureManager {
         featureList.add(trapAuraFeature);
         featureList.add(crystalAuraFeature);
         featureList.add(inventoryTweaksFeature);
+        featureList.add(fastUseFeature);
+        featureList.add(flightFeature);
     }
 
     public esp getEspFeature() {
         return espFeature;
     }
 
+    public Flight getFlightFeature() {
+        return flightFeature;
+    }
+
     public InventoryTweaks getInventoryTweaksFeature() {
         return inventoryTweaksFeature;
+    }
+
+    public FastUse getFastUseFeature() {
+        return fastUseFeature;
     }
 
     public StashFinder getStashFinderFeature() {

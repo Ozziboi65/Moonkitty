@@ -14,6 +14,7 @@
 		"IPlayerMoveC2SPacket",
 		"FreecamInputMixin",
 		"ChestScreenMixin",
+		"FastUseMixin",
 		"RenderLayerAccessor"
 	],
 	"injectors": {
