@@ -24,6 +24,8 @@ import com.moonkitty.Features.StashFinder;
 import com.moonkitty.Features.Scaffold;
 import com.moonkitty.Features.AutoTunneler;
 import com.moonkitty.Features.Combat.TrapAura;
+import com.moonkitty.Features.Combat.CrystalAura;
+import com.moonkitty.Features.InventoryTweaks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +51,8 @@ public class FeatureManager {
     private final Scaffold scaffoldFeature;
     private final AutoTunneler autoTunnelerFeature;
     private final TrapAura trapAuraFeature;
+    private final CrystalAura crystalAuraFeature;
+    private final InventoryTweaks inventoryTweaksFeature;
     MinecraftClient client;
 
     public static final FeatureManager INSTANCE = new FeatureManager();
@@ -76,6 +80,8 @@ public class FeatureManager {
         this.scaffoldFeature = new Scaffold();
         this.autoTunnelerFeature = new AutoTunneler();
         this.trapAuraFeature = new TrapAura();
+        this.crystalAuraFeature = new CrystalAura();
+        this.inventoryTweaksFeature = new InventoryTweaks();
 
         featureList.add(espFeature);
         featureList.add(freecamFeature);
@@ -97,10 +103,16 @@ public class FeatureManager {
         featureList.add(scaffoldFeature);
         featureList.add(autoTunnelerFeature);
         featureList.add(trapAuraFeature);
+        featureList.add(crystalAuraFeature);
+        featureList.add(inventoryTweaksFeature);
     }
 
     public esp getEspFeature() {
         return espFeature;
+    }
+
+    public InventoryTweaks getInventoryTweaksFeature() {
+        return inventoryTweaksFeature;
     }
 
     public StashFinder getStashFinderFeature() {

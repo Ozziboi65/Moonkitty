@@ -12,6 +12,8 @@
 		"CriticalsMixin",
 		"setPacketRotMixin",
 		"IPlayerMoveC2SPacket",
+		"FreecamInputMixin",
+		"ChestScreenMixin",
 		"RenderLayerAccessor"
 	],
 	"injectors": {

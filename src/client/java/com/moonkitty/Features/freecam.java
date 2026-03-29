@@ -35,6 +35,7 @@ public class freecam extends Feature {
 
     private NumberSetting speedSetting;
     private BooleanSetting optimiseSetting;
+    private BooleanSetting cancelPacketSetting;
 
     private World world;
 
@@ -46,8 +47,8 @@ public class freecam extends Feature {
     public Vec3d Freecam_orginal_pos = Vec3d.ZERO;
 
     public boolean initialized = false;
-
     private boolean optimise = true;
+    public boolean cancelPackets = true;
 
     @Override
     protected void onEnable() {
@@ -89,9 +90,11 @@ public class freecam extends Feature {
         // Initialize settings
         speedSetting = new NumberSetting("Speed", 0.5, 0.1, 5.0, 0.1);
         optimiseSetting = new BooleanSetting("Optimise", true);
+        cancelPacketSetting = new BooleanSetting("Cancel Packets", false);
 
         addSetting(speedSetting);
         addSetting(optimiseSetting);
+        addSetting(cancelPacketSetting);
     }
 
     @Override
@@ -105,15 +108,16 @@ public class freecam extends Feature {
         // Update values from settings
         speed = speedSetting.getValue().floatValue();
         optimise = optimiseSetting.getValue();
+        cancelPackets = cancelPacketSetting.getValue();
 
         if (MoonkittyClient.TOGGLE_FREECAM.wasPressed()) {
             LOGGER.info("Toggle Free cam bind pressed");
 
             client.inGameHud.getChatHud().addMessage(
                     Text.literal("[MOONKITTY]Freecam Toggled With Keybind!"));
-
             this.toggle();
         }
+
     }
 
 }

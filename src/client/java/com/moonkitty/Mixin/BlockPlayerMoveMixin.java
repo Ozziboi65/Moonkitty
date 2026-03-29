@@ -26,7 +26,7 @@ public abstract class BlockPlayerMoveMixin {
             ci.cancel();
         }
 
-        if (FeatureManager.INSTANCE.getFreecamFeature().isEnabled()
+        if (FeatureManager.INSTANCE.getFreecamFeature().cancelPackets
                 && packet instanceof PlayerMoveC2SPacket) {
 
             ci.cancel();

@@ -33,15 +33,19 @@ public class ClickGui extends Screen {
     }
 
     private void initWindows() {
-        int startX = 10;
-        int startY = 10;
         int spacing = 10;
-        int currentX = startX;
-
+        int startY = 10;
+        int screenWidth = this.width > 0 ? this.width : 400;
+        int currentX = 10;
+        int currentY = startY;
         for (Category category : Category.values()) {
             List<Feature> categoryModules = getModulesByCategory(category);
             if (!categoryModules.isEmpty()) {
-                ModuleWindow window = new ModuleWindow(category, currentX, startY, categoryModules);
+                if (currentX + ModuleWindow.WIDTH > screenWidth - 10) {
+                    currentX = 10;
+                    currentY += ModuleWindow.HEADER_HEIGHT + 10 + 100;
+                }
+                ModuleWindow window = new ModuleWindow(category, currentX, currentY, categoryModules);
                 windows.add(window);
                 currentX += ModuleWindow.WIDTH + spacing;
             }

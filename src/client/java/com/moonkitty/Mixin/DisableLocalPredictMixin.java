@@ -16,7 +16,7 @@ public abstract class DisableLocalPredictMixin {
 
     @Inject(method = "tickMovement", at = @At("HEAD"), cancellable = true)
     private void onTickMovement(CallbackInfo ci) {
-        if (FeatureManager.INSTANCE.getFreecamFeature().isEnabled()) {
+        if (FeatureManager.INSTANCE.getFreecamFeature().cancelPackets) {
             ci.cancel();
         }
     }
