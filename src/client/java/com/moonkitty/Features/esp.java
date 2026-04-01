@@ -42,12 +42,12 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.debug.gizmo.GizmoDrawing;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ItemEntity;
 
 public class esp extends Feature {
     public static final Logger LOGGER = LoggerFactory.getLogger("moonkitty");
-    public MinecraftClient McClient;
+    public MinecraftClient client;
 
-    private NumberSetting rangeSetting;
     private BooleanSetting boxSetting;
     private BooleanSetting hostileSetting;
     private BooleanSetting itemSetting;
@@ -83,40 +83,20 @@ public class esp extends Feature {
         addSetting(itemSetting);
     }
 
-    public boolean getHostile() {
-        return showHostile;
-    }
-
-    public boolean getOutline() {
-        return outline;
-    }
-
-    public boolean getItem() {
-        return showItem;
-    }
-
-    public boolean getBox() {
-        return renderBox;
-    }
-
     @Override
     public void init() {
-        this.McClient = MinecraftClient.getInstance();
-        Menu menuObject = Menu.INSTANCE;
+        this.client = MinecraftClient.getInstance();
 
         WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> {
             renderBox = boxSetting.getValue();
             showHostile = hostileSetting.getValue();
             showItem = itemSetting.getValue();
 
-            if (!isEnabled() || McClient.player == null || McClient.world == null)
+            if (!isEnabled() || client.player == null || client.world == null)
                 return;
 
-            if (!getBox())
-                return;
-
-            for (AbstractClientPlayerEntity player : McClient.world.getPlayers()) {
-                if (player == McClient.player)
+            for (AbstractClientPlayerEntity player : client.world.getPlayers()) {
+                if (player == client.player)
                     continue;
 
                 if (renderBox) {
@@ -124,11 +104,19 @@ public class esp extends Feature {
                 }
             }
 
-            for (Entity entity : McClient.world.getEntities())
+            for (Entity entity : client.world.getEntities()) {
+                if (entity instanceof ItemEntity itemEntity)
+                    if (showItem) {
+                        GizmoDrawing.box(itemEntity.getBoundingBox(), DrawStyle.stroked(color_item, 2))
+                                .ignoreOcclusion();
+                    }
 
+            }
+
+            for (Entity entity : client.world.getEntities())
                 if (entity instanceof HostileEntity) {
 
-                    if (renderBox) {
+                    if (showHostile) {
                         GizmoDrawing.box(entity.getBoundingBox(), DrawStyle.stroked(color_hostile, 2))
                                 .ignoreOcclusion();
                     }
@@ -137,57 +125,5 @@ public class esp extends Feature {
 
         });
 
-    }
-
-    public void setItem(boolean enabled) {
-        if (this.showItem == enabled)
-            return;
-        this.showItem = enabled;
-    }
-
-    public void setHostile(boolean enabled) {
-        if (this.showHostile == enabled)
-            return;
-        this.showHostile = enabled;
-    }
-
-    public void toggleHostile() {
-        setHostile(!this.showHostile);
-    }
-
-    public void setBox(boolean enabled) {
-        if (this.renderBox == enabled)
-            return;
-        this.renderBox = enabled;
-    }
-
-    public void toggleBox() {
-        setBox(!this.renderBox);
-    }
-
-    public void setOutline(boolean enabled) {
-        if (this.outline == enabled)
-            return;
-        this.outline = enabled;
-    }
-
-    public void toggleOutline() {
-        setOutline(!this.outline);
-    }
-
-    public void toggleItem() {
-        setItem(!this.showItem);
-    }
-
-    public void setRange(int range) {
-        this.range = range;
-    }
-
-    public void setPlayerColor(int color) {
-        this.color_player = color;
-    }
-
-    public void setHostileColor(int color) {
-        this.color_hostile = color;
     }
 }

@@ -35,15 +35,22 @@ import java.util.Set;
 public class FastUse extends Feature {
     public static final Logger LOGGER = LoggerFactory.getLogger("moonkitty");
     public int speed = 1;
-    public boolean onlyBlock;
+
+    public boolean block;
+    public boolean crystal;
 
     private NumberSetting speedSetting;
-    private BooleanSetting onlyBlockSetting;
+    private BooleanSetting blockSetting;
+    private BooleanSetting crystalSetting;
 
     public MinecraftClient client;
 
     public int getSpeed() {
         return speed;
+    }
+
+    public boolean getBlock() {
+        return block;
     }
 
     @Override
@@ -60,8 +67,11 @@ public class FastUse extends Feature {
         speedSetting = new NumberSetting("Speed", 1.0, 0.0, 10.0, 1.0);
         addSetting(speedSetting);
 
-        onlyBlockSetting = new BooleanSetting("Only Blocks", true);
-        addSetting(onlyBlockSetting);
+        blockSetting = new BooleanSetting("Blocks", true);
+        addSetting(blockSetting);
+
+        crystalSetting = new BooleanSetting("Crystals", true);
+        addSetting(crystalSetting);
     }
 
     @Override
@@ -70,6 +80,6 @@ public class FastUse extends Feature {
             return;
 
         speed = speedSetting.getValue().intValue();
-        onlyBlock = onlyBlockSetting.getValue();
+        block = blockSetting.getValue();
     }
 }

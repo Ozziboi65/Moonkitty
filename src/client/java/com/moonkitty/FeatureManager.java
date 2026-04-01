@@ -16,8 +16,8 @@ import com.moonkitty.Features.ChestEsp;
 import com.moonkitty.Features.FastUse;
 import com.moonkitty.Features.BoatFly;
 import com.moonkitty.Features.AutoTotem;
-import com.moonkitty.Features.Visuals.PlayerAura;
 import com.moonkitty.Features.Combat.KillAura;
+import com.moonkitty.Features.Combat.MaceDamage;
 import com.moonkitty.Features.Search;
 import com.moonkitty.Features.Combat.Criticals;
 import com.moonkitty.Features.Combat.StrafeAura;
@@ -28,6 +28,7 @@ import com.moonkitty.Features.Combat.TrapAura;
 import com.moonkitty.Features.Combat.CrystalAura;
 import com.moonkitty.Features.InventoryTweaks;
 import com.moonkitty.Features.Flight;
+import com.moonkitty.visuals.Particles.ButterFlies;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,6 @@ public class FeatureManager {
     private final ChestEsp chestespFeature;
     private final BoatFly boatflyFeature;
     private final AutoTotem autototemFeature;
-    private final PlayerAura playerAuraFeature;
     private final KillAura killAuraFeature;
     private final Search searchFeature;
     private final Criticals criticalsFeature;
@@ -57,6 +57,8 @@ public class FeatureManager {
     private final InventoryTweaks inventoryTweaksFeature;
     private final FastUse fastUseFeature;
     private final Flight flightFeature;
+    private final ButterFlies butterFliesFeature;
+    private final MaceDamage maceDamageFeature;
     MinecraftClient client;
 
     public static final FeatureManager INSTANCE = new FeatureManager();
@@ -75,7 +77,6 @@ public class FeatureManager {
         this.chestespFeature = new ChestEsp();
         this.boatflyFeature = new BoatFly();
         this.autototemFeature = new AutoTotem();
-        this.playerAuraFeature = new PlayerAura();
         this.killAuraFeature = new KillAura();
         this.searchFeature = new Search();
         this.criticalsFeature = new Criticals();
@@ -88,6 +89,8 @@ public class FeatureManager {
         this.inventoryTweaksFeature = new InventoryTweaks();
         this.fastUseFeature = new FastUse();
         this.flightFeature = new Flight();
+        this.butterFliesFeature = new ButterFlies();
+        this.maceDamageFeature = new MaceDamage();
 
         featureList.add(espFeature);
         featureList.add(freecamFeature);
@@ -100,7 +103,6 @@ public class FeatureManager {
         featureList.add(chestespFeature);
         featureList.add(boatflyFeature);
         featureList.add(autototemFeature);
-        featureList.add(playerAuraFeature);
         featureList.add(killAuraFeature);
         featureList.add(searchFeature);
         featureList.add(criticalsFeature);
@@ -113,6 +115,8 @@ public class FeatureManager {
         featureList.add(inventoryTweaksFeature);
         featureList.add(fastUseFeature);
         featureList.add(flightFeature);
+        featureList.add(butterFliesFeature);
+        featureList.add(maceDamageFeature);
     }
 
     public esp getEspFeature() {
@@ -157,10 +161,6 @@ public class FeatureManager {
 
     public Tracer getTracerFeature() {
         return tracerFeature;
-    }
-
-    public PlayerAura getPlayerAura() {
-        return playerAuraFeature;
     }
 
     public companion getCompanionFeature() {

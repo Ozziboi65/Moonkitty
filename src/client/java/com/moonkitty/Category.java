@@ -7,7 +7,8 @@ public enum Category {
     PLAYER("Player"),
     WORLD("World"),
     MISC("Misc"),
-    DONUT("Donut");
+    DONUT("Donut"),
+    VISUAL("Visual");
 
     private final String name;
 

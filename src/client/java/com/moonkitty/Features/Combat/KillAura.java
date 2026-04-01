@@ -139,7 +139,7 @@ public class KillAura extends Feature {
         checkVisible = visibleSetting.getValue();
         attackWhenReady = readySetting.getValue();
 
-        if (!isEnabled() || client.player == null || McClient.world == null)
+        if (!isEnabled() || client.player == null || client.world == null)
             return;
 
         currentTarget = null;

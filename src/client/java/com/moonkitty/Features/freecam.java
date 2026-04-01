@@ -20,6 +20,7 @@ import net.minecraft.client.util.InputUtil;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import org.lwjgl.glfw.GLFW;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.option.Perspective;
 import net.minecraft.client.MinecraftClient;
 import com.moonkitty.MoonkittyClient;
 import com.moonkitty.Gui.Menu;
@@ -31,7 +32,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 
 public class freecam extends Feature {
     public static final Logger LOGGER = LoggerFactory.getLogger("moonkitty");
-    public MinecraftClient McClient;
+    public MinecraftClient client;
 
     private NumberSetting speedSetting;
     private BooleanSetting optimiseSetting;
@@ -99,8 +100,18 @@ public class freecam extends Feature {
 
     @Override
     public void init() {
-        Menu menuObject = Menu.INSTANCE;
+        this.client = MinecraftClient.getInstance();
+    }
 
+    @Override
+    public void toggle() {
+        setEnabled(!this.isEnabled());
+        if (this.isEnabled()) {
+            client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
+        }
+        if (!this.isEnabled()) {
+            client.options.setPerspective(Perspective.FIRST_PERSON);
+        }
     }
 
     @Override

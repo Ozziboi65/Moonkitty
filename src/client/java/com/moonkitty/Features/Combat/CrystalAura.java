@@ -2,6 +2,8 @@ package com.moonkitty.Features.Combat;
 
 import com.moonkitty.Category;
 import com.moonkitty.Feature;
+import com.moonkitty.NumberSetting;
+import com.moonkitty.Util.ConfigUtil;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -45,11 +47,20 @@ public class CrystalAura extends Feature {
     public float maxDamageSelf = 4;
     public float minDamageToTarget = 4;
 
+    private NumberSetting maxToSelfSetting;
+    private NumberSetting minToTargetSetting;
+
     public CrystalAura() {
         this.name = "CrystalAura";
         this.setCategory(Category.COMBAT);
         this.feature_id = 45;
         this.setEnabled(false);
+
+        maxToSelfSetting = new NumberSetting("Max Damage To Self", 2.0, 1.0, 10.0, 0.5);
+        minToTargetSetting = new NumberSetting("Min Damage To Target", 3.5, 2.0, 25.0, 0.5);
+
+        addSetting(maxToSelfSetting);
+        addSetting(minToTargetSetting);
     }
 
     @Override
@@ -58,6 +69,9 @@ public class CrystalAura extends Feature {
 
         if (!this.isEnabled())
             return;
+
+        maxDamageSelf = maxToSelfSetting.getValue().floatValue();
+        minDamageToTarget = minToTargetSetting.getValue().floatValue();
 
         if (client.player == null || client.getNetworkHandler() == null || client.world == null)
             return;
