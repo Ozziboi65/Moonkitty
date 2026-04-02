@@ -3,7 +3,6 @@ package com.moonkitty.Features.Combat;
 import com.moonkitty.Category;
 import com.moonkitty.Feature;
 import com.moonkitty.NumberSetting;
-import com.moonkitty.Util.ConfigUtil;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;

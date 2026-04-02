@@ -9,7 +9,6 @@ import com.moonkitty.Category;
 import com.moonkitty.Feature;
 import com.moonkitty.NumberSetting;
 import com.moonkitty.Gui.Menu;
-import com.moonkitty.Util.ConfigUtil;
 import com.moonkitty.Features.Combat.KillAuraHud;
 
 import net.minecraft.client.MinecraftClient;
@@ -123,10 +122,6 @@ public class KillAura extends Feature {
         rot = new float[2];
 
         KillAuraHud.init();
-
-        this.reach = (float) ConfigUtil.getDouble("killAura.range", this.reach);
-        this.attackDelay = ConfigUtil.getInt("killAura.delayMs", this.attackDelay);
-        this.setEnabled(ConfigUtil.getBoolean("killAura.enabled", isEnabled()));
 
     }
 

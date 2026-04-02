@@ -49,7 +49,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.c2s.play.HandSwingC2SPacket;
 import net.minecraft.util.Hand;
 
-import com.moonkitty.Util.ConfigUtil;
 import com.google.gson.JsonObject;
 
 import net.minecraft.util.hit.BlockHitResult;
@@ -130,11 +129,6 @@ public class StrafeAura extends Feature {
         Menu menuObject = Menu.INSTANCE;
 
         KillAuraHud.init();
-
-        // this.reach = (float) ConfigUtil.getDouble("killAura.range", this.reach);
-        // this.attackDelay = ConfigUtil.getInt("killAura.delayMs", this.attackDelay);
-        // this.setEnabled(ConfigUtil.getBoolean("killAura.enabled", isEnabled()));
-
     }
 
     @Override

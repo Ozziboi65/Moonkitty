@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import com.moonkitty.Gui.Hud;
 import com.moonkitty.Gui.Menu;
 import com.moonkitty.Gui.ClickGui;
-import com.moonkitty.Util.ConfigUtil;
 import com.moonkitty.Util.FileIO;
 
 import com.moonkitty.Features.esp;
@@ -69,8 +68,6 @@ public class MoonkittyClient implements ClientModInitializer {
                 FeatureManager.INSTANCE.Init();
 
                 FileIO.ExtractFromJar("assets/moonkitty/gif/1.gif", "moonkitty/1.gif");
-
-                ConfigUtil.init();
 
                 Hud.init();
 

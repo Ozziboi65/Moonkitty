@@ -60,7 +60,7 @@ import net.minecraft.entity.Entity;
 
 import com.moonkitty.Features.Combat.KillAuraHud;
 
-public class Flight extends Feature {
+public class AntiKnockBack extends Feature {
     public static final Logger LOGGER = LoggerFactory.getLogger("moonkitty");
     public static MinecraftClient client;
 
@@ -74,19 +74,15 @@ public class Flight extends Feature {
     double speed = 0.28 * horizontalSpeedMultiplier;
 
     private NumberSetting speedSetting;
-    private NumberSetting verticalSpeedSetting;
 
-    public Flight() {
-        this.name = "Flight";
+    public AntiKnockBack() {
+        this.name = "AntiKnockBack";
         this.feature_id = 323;
         this.setCategory(Category.MOVEMENT);
         this.setEnabled(false);
 
         speedSetting = new NumberSetting("Horizontal Speed", 4.0, 1.0, 10.0, 0.5);
         addSetting(speedSetting);
-
-        verticalSpeedSetting = new NumberSetting("Vertical Speed", 1.0, 0.4, 10.0, 0.5);
-        addSetting(verticalSpeedSetting);
     }
 
     @Override
@@ -101,7 +97,6 @@ public class Flight extends Feature {
             return;
 
         horizontalSpeedMultiplier = speedSetting.getValue().floatValue();
-        verticalSpeed = verticalSpeedSetting.getValue().floatValue();
 
         double yaw = Math.toRadians(client.player.getYaw());
         double speed = 0.28 * horizontalSpeedMultiplier;
