@@ -110,6 +110,10 @@ public class StashFinder extends Feature {
         if (client.player == null || client.world == null)
             return;
 
+        if (!this.isEnabled()) {
+            return;
+        }
+
         minBlockEntityCount = minBlockEntity.getValue().intValue();
 
         int renderDist = client.options.getClampedViewDistance();

@@ -21,6 +21,7 @@ import com.moonkitty.Features.Combat.MaceDamage;
 import com.moonkitty.Features.Search;
 import com.moonkitty.Features.Combat.Criticals;
 import com.moonkitty.Features.Combat.StrafeAura;
+import com.moonkitty.Features.Combat.AntiKnockBack;
 import com.moonkitty.Features.StashFinder;
 import com.moonkitty.Features.Scaffold;
 import com.moonkitty.Features.AutoTunneler;
@@ -59,6 +60,7 @@ public class FeatureManager {
     private final Flight flightFeature;
     private final ButterFlies butterFliesFeature;
     private final MaceDamage maceDamageFeature;
+    private final AntiKnockBack antiKnockbackFeature;
     MinecraftClient client;
 
     public static final FeatureManager INSTANCE = new FeatureManager();
@@ -91,6 +93,7 @@ public class FeatureManager {
         this.flightFeature = new Flight();
         this.butterFliesFeature = new ButterFlies();
         this.maceDamageFeature = new MaceDamage();
+        this.antiKnockbackFeature = new AntiKnockBack();
 
         featureList.add(espFeature);
         featureList.add(freecamFeature);
@@ -117,6 +120,7 @@ public class FeatureManager {
         featureList.add(flightFeature);
         featureList.add(butterFliesFeature);
         featureList.add(maceDamageFeature);
+        featureList.add(antiKnockbackFeature);
     }
 
     public esp getEspFeature() {
@@ -133,6 +137,10 @@ public class FeatureManager {
 
     public FastUse getFastUseFeature() {
         return fastUseFeature;
+    }
+
+    public AntiKnockBack getAntiKnockbackFeature() {
+        return antiKnockbackFeature;
     }
 
     public StashFinder getStashFinderFeature() {
