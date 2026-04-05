@@ -28,7 +28,6 @@ import com.moonkitty.Features.Combat.TrapAura;
 import com.moonkitty.Features.Combat.CrystalAura;
 import com.moonkitty.Features.InventoryTweaks;
 import com.moonkitty.Features.Flight;
-import com.moonkitty.visuals.Particles.ButterFlies;
 import com.moonkitty.visuals.BreakOverlay;
 
 import java.util.ArrayList;
@@ -58,7 +57,6 @@ public class FeatureManager {
     private final InventoryTweaks inventoryTweaksFeature;
     private final FastUse fastUseFeature;
     private final Flight flightFeature;
-    private final ButterFlies butterFliesFeature;
     private final MaceAura maceAuraFeature;
     private final BreakOverlay breakOverlayFeature;
     MinecraftClient client;
@@ -91,7 +89,6 @@ public class FeatureManager {
         this.inventoryTweaksFeature = new InventoryTweaks();
         this.fastUseFeature = new FastUse();
         this.flightFeature = new Flight();
-        this.butterFliesFeature = new ButterFlies();
         this.maceAuraFeature = new MaceAura();
         this.breakOverlayFeature = new BreakOverlay();
 
@@ -118,7 +115,6 @@ public class FeatureManager {
         featureList.add(inventoryTweaksFeature);
         featureList.add(fastUseFeature);
         featureList.add(flightFeature);
-        featureList.add(butterFliesFeature);
         featureList.add(maceAuraFeature);
         featureList.add(breakOverlayFeature);
     }
