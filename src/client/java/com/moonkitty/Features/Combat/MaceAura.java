@@ -34,7 +34,7 @@ import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.entity.Entity;
 
-public class MaceDamage extends Feature {
+public class MaceAura extends Feature {
     MinecraftClient client = MinecraftClient.getInstance();
 
     public int reach = 5;
@@ -49,8 +49,8 @@ public class MaceDamage extends Feature {
 
     private NumberSetting blockCountSetting;
 
-    public MaceDamage() {
-        this.name = "Mace Damage";
+    public MaceAura() {
+        this.name = "MaceAura";
         this.setCategory(Category.COMBAT);
         this.feature_id = 45;
         this.setEnabled(false);

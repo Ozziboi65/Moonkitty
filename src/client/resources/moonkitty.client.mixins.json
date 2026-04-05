@@ -11,10 +11,14 @@
 		"CriticalsMixin",
 		"setPacketRotMixin",
 		"IPlayerMoveC2SPacket",
+		"PlayerMoveC2SPacketMixin",
+		"FlightAntiKickMixin",
 		"FreecamInputMixin",
 		"ChestScreenMixin",
 		"FastUseMixin",
-		"RenderLayerAccessor"
+		"AntiKnockbackMixin",
+		"RenderLayerAccessor",
+		"ClientPlayerEntityMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

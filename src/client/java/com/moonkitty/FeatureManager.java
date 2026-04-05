@@ -17,7 +17,7 @@ import com.moonkitty.Features.FastUse;
 import com.moonkitty.Features.BoatFly;
 import com.moonkitty.Features.AutoTotem;
 import com.moonkitty.Features.Combat.KillAura;
-import com.moonkitty.Features.Combat.MaceDamage;
+import com.moonkitty.Features.Combat.MaceAura;
 import com.moonkitty.Features.Search;
 import com.moonkitty.Features.Combat.Criticals;
 import com.moonkitty.Features.Combat.StrafeAura;
@@ -59,7 +59,7 @@ public class FeatureManager {
     private final FastUse fastUseFeature;
     private final Flight flightFeature;
     private final ButterFlies butterFliesFeature;
-    private final MaceDamage maceDamageFeature;
+    private final MaceAura maceAuraFeature;
     private final AntiKnockBack antiKnockbackFeature;
     MinecraftClient client;
 
@@ -92,7 +92,7 @@ public class FeatureManager {
         this.fastUseFeature = new FastUse();
         this.flightFeature = new Flight();
         this.butterFliesFeature = new ButterFlies();
-        this.maceDamageFeature = new MaceDamage();
+        this.maceAuraFeature = new MaceAura();
         this.antiKnockbackFeature = new AntiKnockBack();
 
         featureList.add(espFeature);
@@ -119,7 +119,7 @@ public class FeatureManager {
         featureList.add(fastUseFeature);
         featureList.add(flightFeature);
         featureList.add(butterFliesFeature);
-        featureList.add(maceDamageFeature);
+        featureList.add(maceAuraFeature);
         featureList.add(antiKnockbackFeature);
     }
 

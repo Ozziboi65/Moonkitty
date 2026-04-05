@@ -42,7 +42,7 @@ public class MoonkittyClient implements ClientModInitializer {
                         Identifier.of("moonkitty", "main"));
 
         public static final KeyBinding OPEN_GUI = KeyBindingHelper.registerKeyBinding(
-                        new KeyBinding("key.moonkitty.open_gui", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_INSERT,
+                        new KeyBinding("key.moonkitty.open_gui", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_RIGHT_SHIFT,
                                         MOONKITTY_CATEGORY));
 
         public static final KeyBinding TOGGLE_FREECAM = KeyBindingHelper.registerKeyBinding(

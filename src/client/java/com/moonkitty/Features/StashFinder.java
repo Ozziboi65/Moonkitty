@@ -10,7 +10,9 @@ import net.minecraft.block.entity.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.WorldChunk;
+import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.debug.gizmo.GizmoDrawing;
+import net.minecraft.client.render.DrawStyle;
 
 import com.moonkitty.Gui.Menu;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -19,6 +21,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.block.BlockState;
+import net.minecraft.registry.Registries;
 
 import com.moonkitty.Features.StashFinderChunk;
 import com.moonkitty.FeatureManager;
@@ -52,6 +56,7 @@ import java.util.List;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.moonkitty.BooleanSetting;
 import com.moonkitty.ButtonSetting;
@@ -147,6 +152,8 @@ public class StashFinder extends Feature {
                 }
 
                 if (blockCount >= minBlockEntityCount) {
+
+
 
                     int avgY = totalY / blockCount;
                     tracerTargets.add(cp.getBlockPos(8, avgY, 8));

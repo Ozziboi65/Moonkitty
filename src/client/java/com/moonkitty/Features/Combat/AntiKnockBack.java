@@ -1,4 +1,4 @@
-package com.moonkitty.Features;
+package com.moonkitty.Features.Combat;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,25 +64,21 @@ public class AntiKnockBack extends Feature {
     public static final Logger LOGGER = LoggerFactory.getLogger("moonkitty");
     public static MinecraftClient client;
 
-    public float verticalSpeed = 0.5f;
-    public float horizontalSpeedMultiplier = 5f;
+    private float strength = 1;
+    private NumberSetting strengthSetting;
 
-    private float targetY = 0;
-
-    double x = 0, z = 0;
-
-    double speed = 0.28 * horizontalSpeedMultiplier;
-
-    private NumberSetting speedSetting;
+    public float getStrength() {
+        return strength;
+    }
 
     public AntiKnockBack() {
         this.name = "AntiKnockBack";
         this.feature_id = 323;
-        this.setCategory(Category.MOVEMENT);
+        this.setCategory(Category.COMBAT);
         this.setEnabled(false);
 
-        speedSetting = new NumberSetting("Horizontal Speed", 4.0, 1.0, 10.0, 0.5);
-        addSetting(speedSetting);
+        strengthSetting = new NumberSetting("Strength", 0.5, 0.0, 10.0, 0.5);
+        addSetting(strengthSetting);
     }
 
     @Override
@@ -96,36 +92,6 @@ public class AntiKnockBack extends Feature {
         if (!isEnabled() || client.player == null || client.world == null)
             return;
 
-        horizontalSpeedMultiplier = speedSetting.getValue().floatValue();
-
-        double yaw = Math.toRadians(client.player.getYaw());
-        double speed = 0.28 * horizontalSpeedMultiplier;
-        double x = 0, z = 0; // reset every tick
-        targetY = 0;
-
-        if (client.options.jumpKey.isPressed())
-            targetY = verticalSpeed;
-        if (client.options.sneakKey.isPressed())
-            targetY = -verticalSpeed;
-
-        if (client.options.forwardKey.isPressed()) {
-            x -= Math.sin(yaw) * speed;
-            z += Math.cos(yaw) * speed;
-        }
-        if (client.options.backKey.isPressed()) {
-            x += Math.sin(yaw) * speed;
-            z -= Math.cos(yaw) * speed;
-        }
-        if (client.options.rightKey.isPressed()) {
-            x -= Math.cos(yaw) * speed;
-            z -= Math.sin(yaw) * speed;
-        }
-        if (client.options.leftKey.isPressed()) {
-            x += Math.cos(yaw) * speed;
-            z += Math.sin(yaw) * speed;
-        }
-
-        client.player.setVelocity(x, targetY, z);
-        client.player.fallDistance = 0;
+        strength = strengthSetting.getValue().floatValue();
     }
 }
