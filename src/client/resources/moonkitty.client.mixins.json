@@ -15,6 +15,7 @@
 		"FlightAntiKickMixin",
 		"FreecamInputMixin",
 		"ChestScreenMixin",
+		"ClientPlayerInteractionManagerAccessor",
 		"FastUseMixin",
 		"RenderLayerAccessor",
 		"ClientPlayerEntityMixin"

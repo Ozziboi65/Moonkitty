@@ -93,6 +93,74 @@ public class RenderUtil {
         lineSegment(consumer, entry, x1, y1, z2, x1, y2, z2, color, lineWidth);
     }
 
+    public static void drawBoxOutline(VertexConsumer consumer, MatrixStack.Entry entry,
+            Vec3d cam, BlockPos pos, float sizeX, float sizeY, float sizeZ, int color, float lineWidth) {
+        float x1 = (float) (pos.getX() - cam.x);
+        float y1 = (float) (pos.getY() - cam.y);
+        float z1 = (float) (pos.getZ() - cam.z);
+        float x2 = x1 + sizeX;
+        float y2 = y1 + sizeY;
+        float z2 = z1 + sizeZ;
+
+        // Bottom face (4 edges)
+        lineSegment(consumer, entry, x1, y1, z1, x2, y1, z1, color, lineWidth);
+        lineSegment(consumer, entry, x2, y1, z1, x2, y1, z2, color, lineWidth);
+        lineSegment(consumer, entry, x2, y1, z2, x1, y1, z2, color, lineWidth);
+        lineSegment(consumer, entry, x1, y1, z2, x1, y1, z1, color, lineWidth);
+
+        // Top face (4 edges)
+        lineSegment(consumer, entry, x1, y2, z1, x2, y2, z1, color, lineWidth);
+        lineSegment(consumer, entry, x2, y2, z1, x2, y2, z2, color, lineWidth);
+        lineSegment(consumer, entry, x2, y2, z2, x1, y2, z2, color, lineWidth);
+        lineSegment(consumer, entry, x1, y2, z2, x1, y2, z1, color, lineWidth);
+
+        // Vertical edges (4 edges)
+        lineSegment(consumer, entry, x1, y1, z1, x1, y2, z1, color, lineWidth);
+        lineSegment(consumer, entry, x2, y1, z1, x2, y2, z1, color, lineWidth);
+        lineSegment(consumer, entry, x2, y1, z2, x2, y2, z2, color, lineWidth);
+        lineSegment(consumer, entry, x1, y1, z2, x1, y2, z2, color, lineWidth);
+    }
+
+    public static void drawBoxOutline(VertexConsumer consumer, MatrixStack.Entry entry,
+            Vec3d cam, BlockPos pos, float size, int color, float lineWidth) {
+        drawBoxOutline(consumer, entry, cam, pos, size, size, size, color, lineWidth);
+    }
+
+    public static void drawBoxOutline(VertexConsumer consumer, MatrixStack.Entry entry,
+            Vec3d cam, Vec3d pos, float sizeX, float sizeY, float sizeZ, int color, float lineWidth) {
+        float x1 = (float) (pos.x - cam.x);
+        float y1 = (float) (pos.y - cam.y);
+        float z1 = (float) (pos.z - cam.z);
+        float x2 = x1 + sizeX;
+        float y2 = y1 + sizeY;
+        float z2 = z1 + sizeZ;
+
+        // Bottom face (4 edges)
+        lineSegment(consumer, entry, x1, y1, z1, x2, y1, z1, color, lineWidth);
+        lineSegment(consumer, entry, x2, y1, z1, x2, y1, z2, color, lineWidth);
+        lineSegment(consumer, entry, x2, y1, z2, x1, y1, z2, color, lineWidth);
+        lineSegment(consumer, entry, x1, y1, z2, x1, y1, z1, color, lineWidth);
+
+        // Top face (4 edges)
+        lineSegment(consumer, entry, x1, y2, z1, x2, y2, z1, color, lineWidth);
+        lineSegment(consumer, entry, x2, y2, z1, x2, y2, z2, color, lineWidth);
+        lineSegment(consumer, entry, x2, y2, z2, x1, y2, z2, color, lineWidth);
+        lineSegment(consumer, entry, x1, y2, z2, x1, y2, z1, color, lineWidth);
+
+        // Vertical edges (4 edges)
+        lineSegment(consumer, entry, x1, y1, z1, x1, y2, z1, color, lineWidth);
+        lineSegment(consumer, entry, x2, y1, z1, x2, y2, z1, color, lineWidth);
+        lineSegment(consumer, entry, x2, y1, z2, x2, y2, z2, color, lineWidth);
+        lineSegment(consumer, entry, x1, y1, z2, x1, y2, z2, color, lineWidth);
+    }
+
+    public static void drawBoxOutlineCentered(VertexConsumer consumer, MatrixStack.Entry entry,
+            Vec3d cam, BlockPos pos, float size, int color, float lineWidth) {
+        float offset = (1.0f - size) / 2.0f;
+        Vec3d centered = new Vec3d(pos.getX() + offset, pos.getY() + offset, pos.getZ() + offset);
+        drawBoxOutline(consumer, entry, cam, centered, size, size, size, color, lineWidth);
+    }
+
     private static void lineSegment(VertexConsumer consumer, MatrixStack.Entry entry,
             float x1, float y1, float z1,
             float x2, float y2, float z2,
