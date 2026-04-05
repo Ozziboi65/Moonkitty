@@ -52,9 +52,6 @@ public class esp extends Feature {
     private BooleanSetting hostileSetting;
     private BooleanSetting itemSetting;
 
-    private int range = 50;
-    private World world;
-
     private boolean showHostile;
     private boolean showItem;
 
@@ -72,7 +69,7 @@ public class esp extends Feature {
         this.name = "ESP";
         this.feature_id = 1;
         this.setCategory(Category.RENDER);
-        this.setEnabled(true);
+        this.setEnabled(false);
 
         boxSetting = new BooleanSetting("Box", true);
         hostileSetting = new BooleanSetting("Hostile", false);

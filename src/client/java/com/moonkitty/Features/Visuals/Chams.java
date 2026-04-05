@@ -18,11 +18,20 @@ public class Chams extends Feature {
 
     public int colorPlayer = 0x28FF83FF;
 
+    public boolean isRenderPlayerEnabled() {
+        return playerSetting.getValue();
+    }
+
+    private BooleanSetting playerSetting;
+
     public Chams() {
         this.name = "Chams";
         this.feature_id = 1;
-        this.setCategory(Category.WORLD);
+        this.setCategory(Category.RENDER);
         this.setEnabled(true);
+
+        playerSetting = new BooleanSetting("Players", true);
+        addSetting(playerSetting);
     }
 
     @Override
