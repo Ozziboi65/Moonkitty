@@ -16,7 +16,6 @@
 		"FreecamInputMixin",
 		"ChestScreenMixin",
 		"FastUseMixin",
-		"AntiKnockbackMixin",
 		"RenderLayerAccessor",
 		"ClientPlayerEntityMixin"
 	],
