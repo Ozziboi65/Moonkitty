@@ -20,6 +20,7 @@ public class ColorPicker extends Screen {
     private int red;
     private int green;
     private int blue;
+    private int alpha;
     private int currentColor = 0xFFFFFFFF;
 
     public ColorPicker(Screen parent) {
@@ -31,14 +32,15 @@ public class ColorPicker extends Screen {
         this.parent = parent;
         this.onSelect = onSelect;
         this.currentColor = initialColor;
+        this.alpha = (initialColor >> 24) & 0xFF;
     }
 
     public void closeMenu() {
         this.client.setScreen(parent);
     }
 
-    private int toArgb(int r, int g, int b) {
-        return (255 << 24) | (r << 16) | (g << 8) | b;
+    private int toArgb(int r, int g, int b, int a) {
+        return (a << 24) | (r << 16) | (g << 8) | b;
     }
 
     @Override
@@ -49,6 +51,7 @@ public class ColorPicker extends Screen {
         this.red = (this.currentColor >> 16) & 0xFF;
         this.green = (this.currentColor >> 8) & 0xFF;
         this.blue = this.currentColor & 0xFF;
+        this.alpha = (this.currentColor >> 24) & 0xFF;
 
         SliderWidget colorRSlider = new SliderWidget(centerX - 100, centerY - 60, 200, 20,
                 Text.literal("Red: "),
@@ -62,7 +65,7 @@ public class ColorPicker extends Screen {
             @Override
             protected void applyValue() {
                 red = (int) (this.value * 255);
-                int colorRGB = toArgb(red, green, blue);
+                int colorRGB = toArgb((int) red, (int) green, (int) blue, (int) alpha);
                 currentColor = colorRGB;
             }
         };
@@ -79,7 +82,7 @@ public class ColorPicker extends Screen {
             @Override
             protected void applyValue() {
                 green = (int) (this.value * 255);
-                int colorRGB = toArgb(red, green, blue);
+                int colorRGB = toArgb((int) red, (int) green, (int) blue, (int) alpha);
                 currentColor = colorRGB;
             }
         };
@@ -96,8 +99,28 @@ public class ColorPicker extends Screen {
             @Override
             protected void applyValue() {
                 blue = (int) (this.value * 255);
-                int colorRGB = toArgb(red, green, blue);
+                int colorRGB = toArgb((int) red, (int) green, (int) blue, (int) alpha);
                 currentColor = colorRGB;
+            }
+        };
+
+        SliderWidget colorASlider = new SliderWidget(centerX - 100, centerY + 30, 200, 20,
+                Text.literal("Alpha: "),
+                this.alpha / 255.0) {
+
+            @Override
+            protected void updateMessage() {
+                this.setMessage(Text.literal("Alpha: " + (int) (this.value * 255)));
+            }
+
+            @Override
+            protected void applyValue() {
+                alpha = (int) (this.value * 255);
+                int colorRGB = toArgb((int) red, (int) green, (int) blue, (int) alpha);
+                currentColor = colorRGB;
+                this.setMessage(Text.literal("Alpha: " + alpha));
+
+                this.setAlpha(1.0f);
             }
         };
 
@@ -124,6 +147,8 @@ public class ColorPicker extends Screen {
         colorGSlider.setMessage(Text.literal("Green: " + this.green));
         this.addDrawableChild(colorBSlider);
         colorBSlider.setMessage(Text.literal("Blue: " + this.blue));
+        this.addDrawableChild(colorASlider);
+        colorASlider.setMessage(Text.literal("Alpha: " + this.alpha));
 
     }
 

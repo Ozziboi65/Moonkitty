@@ -17,6 +17,7 @@
 		"ChestScreenMixin",
 		"ClientPlayerInteractionManagerAccessor",
 		"FastUseMixin",
+		"ChamsMixin",
 		"RenderLayerAccessor",
 		"ClientPlayerEntityMixin"
 	],

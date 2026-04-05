@@ -73,10 +73,6 @@ public class BreakOverlay extends Feature {
 
         breakProgress = ((ClientPlayerInteractionManagerAccessor) client.interactionManager)
                 .getCurrentBreakingProgress();
-
-        System.out.println("breaking X:" + breakingPos.getX() + "breaking Y:" + breakingPos.getY() + "breaking Z:"
-                + breakingPos.getZ() + "Progress: " + breakProgress);
-
     }
 
 }

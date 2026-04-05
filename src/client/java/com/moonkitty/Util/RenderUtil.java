@@ -43,6 +43,26 @@ public class RenderUtil {
                     .outputTarget(OutputTarget.ITEM_ENTITY_TARGET)
                     .build());
 
+    private static final RenderPipeline CHAMS_PIPELINE = RenderPipeline.builder()
+            .withUniform("DynamicTransforms", UniformType.UNIFORM_BUFFER)
+            .withUniform("Projection", UniformType.UNIFORM_BUFFER)
+            .withVertexShader("core/moonkitty_chams")
+            .withFragmentShader("core/moonkitty_chams")
+            .withBlend(BlendFunction.TRANSLUCENT)
+            .withCull(false)
+            .withVertexFormat(VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
+                    VertexFormat.DrawMode.QUADS)
+            .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+            .withDepthWrite(false)
+            .withLocation("moonkitty/chams")
+            .build();
+
+    public static final RenderLayer CHAMS_LAYER = RenderLayerAccessor.invokeOf(
+            "moonkitty_chams",
+            RenderSetup.builder(CHAMS_PIPELINE)
+                    .outputTarget(OutputTarget.ITEM_ENTITY_TARGET)
+                    .build());
+
     public static VertexConsumer getLineConsumer(VertexConsumerProvider consumers) {
         return consumers.getBuffer(LINES_SEE_THROUGH);
     }

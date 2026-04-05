@@ -29,6 +29,7 @@ import com.moonkitty.Features.Combat.CrystalAura;
 import com.moonkitty.Features.InventoryTweaks;
 import com.moonkitty.Features.Flight;
 import com.moonkitty.visuals.BreakOverlay;
+import com.moonkitty.Features.Visuals.Chams;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +60,7 @@ public class FeatureManager {
     private final Flight flightFeature;
     private final MaceAura maceAuraFeature;
     private final BreakOverlay breakOverlayFeature;
+    private final Chams chamsFeature;
     MinecraftClient client;
 
     public static final FeatureManager INSTANCE = new FeatureManager();
@@ -91,6 +93,7 @@ public class FeatureManager {
         this.flightFeature = new Flight();
         this.maceAuraFeature = new MaceAura();
         this.breakOverlayFeature = new BreakOverlay();
+        this.chamsFeature = new Chams();
 
         featureList.add(espFeature);
         featureList.add(freecamFeature);
@@ -117,10 +120,15 @@ public class FeatureManager {
         featureList.add(flightFeature);
         featureList.add(maceAuraFeature);
         featureList.add(breakOverlayFeature);
+        featureList.add(chamsFeature);
     }
 
     public esp getEspFeature() {
         return espFeature;
+    }
+
+    public Chams getChamsFeature() {
+        return chamsFeature;
     }
 
     public Flight getFlightFeature() {
