@@ -53,7 +53,7 @@ public class RenderUtil {
             .withVertexFormat(VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
                     VertexFormat.DrawMode.QUADS)
             .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
-            .withDepthWrite(false)
+            .withDepthWrite(true)
             .withLocation("moonkitty/chams")
             .build();
 

@@ -33,7 +33,8 @@ public abstract class ChamsMixin<S extends LivingEntityRenderState> {
         Chams chamsFeature = FeatureManager.INSTANCE.getChamsFeature();
         if (chamsFeature != null && chamsFeature.isEnabled() && chamsFeature.isRenderPlayerEnabled()
                 && state instanceof PlayerEntityRenderState) {
-            queue.submitModel(model, state, matrices, RenderUtil.CHAMS_LAYER, light, overlay,
+            queue.getBatchingQueue(Integer.MAX_VALUE).submitModel(model, state, matrices, RenderUtil.CHAMS_LAYER, light,
+                    overlay,
                     chamsFeature.colorPlayer, sprite, outlineColor, crumbling);
         } else {
             queue.submitModel(model, state, matrices, renderLayer, light, overlay, color, sprite, outlineColor,
