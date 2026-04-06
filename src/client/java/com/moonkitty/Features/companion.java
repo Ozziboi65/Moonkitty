@@ -214,7 +214,7 @@ public class companion extends Feature {
     }
 
     @Override
-    protected void onEnable() {
+    public void onEnable() {
         loadGif();
     }
 

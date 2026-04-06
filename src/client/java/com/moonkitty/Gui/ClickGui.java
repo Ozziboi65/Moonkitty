@@ -3,6 +3,8 @@ package com.moonkitty.Gui;
 import com.moonkitty.Category;
 import com.moonkitty.Feature;
 import com.moonkitty.FeatureManager;
+import com.moonkitty.config.ConfigManager;
+
 import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -12,6 +14,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 public class ClickGui extends Screen {
     private final List<ModuleWindow> windows = new ArrayList<>();
@@ -26,6 +31,8 @@ public class ClickGui extends Screen {
     public static final int MODULE_ENABLED_COLOR = 0xFF8B4FC3;
     public static final int TEXT_COLOR = 0xFFFFFFFF;
     public static final int TEXT_DISABLED_COLOR = 0xFFAAAAAA;
+
+    public static final Logger LOGGER = LoggerFactory.getLogger("moonkitty");
 
     public ClickGui() {
         super(Text.literal("Click GUI"));
@@ -153,6 +160,8 @@ public class ClickGui extends Screen {
 
     @Override
     public void close() {
+        LOGGER.info("Menu Closed Saving config");
+        ConfigManager.saveConfigSettings();
         super.close();
     }
 }

@@ -52,7 +52,7 @@ public class freecam extends Feature {
     public boolean cancelPackets = true;
 
     @Override
-    protected void onEnable() {
+    public void onEnable() {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client != null && client.gameRenderer != null) {
             Camera camera = client.gameRenderer.getCamera();

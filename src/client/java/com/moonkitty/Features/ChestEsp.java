@@ -73,12 +73,19 @@ public class ChestEsp extends Feature {
     public List<BarrelBlockEntity> barrelList = new ArrayList<>();
     public List<ShulkerBoxBlockEntity> shulkerList = new ArrayList<>();
 
+    private List<net.minecraft.util.math.BlockPos> chestPosList = new ArrayList<>();
+    private List<net.minecraft.util.math.BlockPos> enderChestPosList = new ArrayList<>();
+    private List<net.minecraft.util.math.BlockPos> barrelPosList = new ArrayList<>();
+    private List<net.minecraft.util.math.BlockPos> shulkerPosList = new ArrayList<>();
+
     public ChestEsp() {
         this.name = "container esp";
         this.feature_id = 58;
         this.setCategory(Category.RENDER);
         this.setEnabled(true);
     }
+
+    private static final MatrixStack.Entry IDENTITY_ENTRY = new MatrixStack().peek();
 
     public boolean getRenderChest() {
         return renderChest;
@@ -154,33 +161,16 @@ public class ChestEsp extends Feature {
 
             Camera camera = McClient.gameRenderer.getCamera();
             Vec3d cam = camera.getCameraPos();
-            MatrixStack matrices = new MatrixStack();
-            MatrixStack.Entry entry = matrices.peek();
             VertexConsumer consumer = RenderUtil.getLineConsumer(context.consumers());
 
-            if (renderChest) {
-                for (ChestBlockEntity chest : chestList) {
-                    RenderUtil.drawBoxOutline(consumer, entry, cam, chest.getPos(), chestColor, 1.0f);
-                }
-            }
-
-            if (renderEnderChest) {
-                for (EnderChestBlockEntity chest : enderChestList) {
-                    RenderUtil.drawBoxOutline(consumer, entry, cam, chest.getPos(), enderChestColor, 1.0f);
-                }
-            }
-
-            if (renderBarrel) {
-                for (BarrelBlockEntity chest : barrelList) {
-                    RenderUtil.drawBoxOutline(consumer, entry, cam, chest.getPos(), barrelColor, 1.0f);
-                }
-            }
-
-            if (renderShulker) {
-                for (ShulkerBoxBlockEntity chest : shulkerList) {
-                    RenderUtil.drawBoxOutline(consumer, entry, cam, chest.getPos(), shulkerColor, 1.0f);
-                }
-            }
+            if (renderChest)
+                RenderUtil.drawBoxOutlines(consumer, cam, chestPosList, chestColor, 1.0f);
+            if (renderEnderChest)
+                RenderUtil.drawBoxOutlines(consumer, cam, enderChestPosList, enderChestColor, 1.0f);
+            if (renderBarrel)
+                RenderUtil.drawBoxOutlines(consumer, cam, barrelPosList, barrelColor, 1.0f);
+            if (renderShulker)
+                RenderUtil.drawBoxOutlines(consumer, cam, shulkerPosList, shulkerColor, 1.0f);
         });
     }
 
@@ -231,6 +221,24 @@ public class ChestEsp extends Feature {
         enderChestList = newEnderChests;
         barrelList = newBarrels;
         shulkerList = newShulkers;
+
+        List<net.minecraft.util.math.BlockPos> newChestPos = new ArrayList<>(newChests.size());
+        for (ChestBlockEntity e : newChests)
+            newChestPos.add(e.getPos());
+        List<net.minecraft.util.math.BlockPos> newEnderChestPos = new ArrayList<>(newEnderChests.size());
+        for (EnderChestBlockEntity e : newEnderChests)
+            newEnderChestPos.add(e.getPos());
+        List<net.minecraft.util.math.BlockPos> newBarrelPos = new ArrayList<>(newBarrels.size());
+        for (BarrelBlockEntity e : newBarrels)
+            newBarrelPos.add(e.getPos());
+        List<net.minecraft.util.math.BlockPos> newShulkerPos = new ArrayList<>(newShulkers.size());
+        for (ShulkerBoxBlockEntity e : newShulkers)
+            newShulkerPos.add(e.getPos());
+
+        chestPosList = newChestPos;
+        enderChestPosList = newEnderChestPos;
+        barrelPosList = newBarrelPos;
+        shulkerPosList = newShulkerPos;
 
         scanTime = 0;
 

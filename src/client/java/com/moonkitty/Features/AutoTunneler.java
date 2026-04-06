@@ -62,7 +62,7 @@ public class AutoTunneler extends Feature {
         this.client = MinecraftClient.getInstance();
     }
 
-    protected void onDisable() {
+    public void onDisable() {
         client.options.forwardKey.setPressed(false);
         client.options.attackKey.setPressed(false);
     }

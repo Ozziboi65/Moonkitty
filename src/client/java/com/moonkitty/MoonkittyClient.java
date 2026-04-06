@@ -20,6 +20,7 @@ import com.moonkitty.Feature;
 
 import com.moonkitty.FeatureManager;
 import com.moonkitty.bot.BotActions;
+import com.moonkitty.config.ConfigManager;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
@@ -66,12 +67,24 @@ public class MoonkittyClient implements ClientModInitializer {
                 }
 
                 FeatureManager.INSTANCE.Init();
+                ConfigManager.getConfigSettings();
 
                 FileIO.ExtractFromJar("assets/moonkitty/gif/1.gif", "moonkitty/1.gif");
 
                 Hud.init();
 
+                boolean[] postInitDone = { false };
+
                 ClientTickEvents.END_CLIENT_TICK.register(client -> {
+
+                        if (!postInitDone[0]) {
+                                postInitDone[0] = true;
+                                for (Feature feature : FeatureManager.INSTANCE.featureList) {
+                                        if (feature.isEnabled()) {
+                                                feature.onEnable();
+                                        }
+                                }
+                        }
 
                         if (OPEN_GUI.wasPressed()) {
                                 LOGGER.info("Menu Key Triggered");

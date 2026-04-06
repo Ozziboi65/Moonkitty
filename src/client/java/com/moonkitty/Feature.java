@@ -57,10 +57,10 @@ public class Feature {
     protected void init() {
     }
 
-    protected void onEnable() {
+    public void onEnable() {
     }
 
-    protected void onDisable() {
+    public void onDisable() {
     }
 
     protected void onInit() {

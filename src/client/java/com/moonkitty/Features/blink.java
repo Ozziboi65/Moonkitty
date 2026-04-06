@@ -66,7 +66,7 @@ public class blink extends Feature {
     private NumberSetting tickCancelTimeSetting;
 
     @Override
-    protected void onEnable() {
+    public void onEnable() {
         if (!initialized) {
 
             HudRenderCallback.EVENT.register(
@@ -116,7 +116,7 @@ public class blink extends Feature {
     }
 
     @Override
-    protected void onDisable() {
+    public void onDisable() {
         tickCounter = 0;
         shouldCancelPacket = false;
     }

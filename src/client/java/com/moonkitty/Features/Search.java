@@ -100,13 +100,13 @@ public class Search extends Feature {
     }
 
     @Override
-    protected void onEnable() {
+    public void onEnable() {
         needsFullUpdate = true;
         limitReached = false;
     }
 
     @Override
-    protected void onDisable() {
+    public void onDisable() {
         chunkBlocks.clear();
     }
 

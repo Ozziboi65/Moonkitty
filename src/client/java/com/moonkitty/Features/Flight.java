@@ -51,8 +51,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.c2s.play.HandSwingC2SPacket;
 import net.minecraft.util.Hand;
 
-import com.google.gson.JsonObject;
-
 import com.moonkitty.accessor.IPlayerMoveC2SPacketMutable;
 import com.moonkitty.accessor.IClientPlayerEntityAccessor;
 
