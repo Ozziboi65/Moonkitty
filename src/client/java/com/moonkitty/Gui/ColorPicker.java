@@ -7,6 +7,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.client.gui.widget.TextWidget;
+import net.minecraft.client.gui.DrawContext;
 
 import java.util.function.Consumer;
 
@@ -22,6 +23,8 @@ public class ColorPicker extends Screen {
     private int blue;
     private int alpha;
     private int currentColor = 0xFFFFFFFF;
+
+    private final int PREVIEW_SIZE = 80;
 
     public ColorPicker(Screen parent) {
         this(parent, 0xFFFFFFFF, null);
@@ -41,6 +44,21 @@ public class ColorPicker extends Screen {
 
     private int toArgb(int r, int g, int b, int a) {
         return (a << 24) | (r << 16) | (g << 8) | b;
+    }
+
+    @Override
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        int centerX = this.width / 2;
+        int centerY = this.height / 2;
+
+        int previewX1 = centerX - PREVIEW_SIZE / 2;
+        int previewX2 = centerX + PREVIEW_SIZE / 2;
+        int previewY1 = (centerY - PREVIEW_SIZE / 2) + 120;
+        int previewY2 = (centerY + PREVIEW_SIZE / 2) + 120;
+
+        context.fill(previewX1, previewY1, previewX2, previewY2, toArgb(red, green, blue, 255));
+
+        super.render(context, mouseX, mouseY, delta);
     }
 
     @Override
