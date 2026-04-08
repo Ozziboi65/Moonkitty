@@ -16,7 +16,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.MaceItem;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import net.minecraft.text.Text;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -43,11 +45,14 @@ public class MaceAura extends Feature {
     long lastAttackTime = 0;
 
     private final float BLOCK_PER_STEP = 1.0f;
+    private final int MAX_STEPS_RAYCAST = 9;
     private int steps = 8;
 
     Vec3d orginalPos = new Vec3d(0, 0, 0);
 
     private NumberSetting blockCountSetting;
+    private BooleanSetting checkDistSetting;
+    boolean checkDist;
 
     public MaceAura() {
         this.name = "MaceAura";
@@ -57,6 +62,9 @@ public class MaceAura extends Feature {
 
         blockCountSetting = new NumberSetting("Spoof By (blocks)", 8.0, 1.0, 55.0, 1.0);
         addSetting(blockCountSetting);
+
+        checkDistSetting = new BooleanSetting("Check Vertical Distance", true);
+        addSetting(checkDistSetting);
     }
 
     @Override
@@ -68,6 +76,8 @@ public class MaceAura extends Feature {
     public void tick(MinecraftClient client) {
         if (!isEnabled() || client.player == null || client.world == null)
             return;
+
+        checkDist = checkDistSetting.getValue();
 
         steps = blockCountSetting.getValue().intValue();
         ItemStack itemHolding = client.player.getMainHandStack();
@@ -95,6 +105,28 @@ public class MaceAura extends Feature {
 
             if (distSq > reach * reach) {
                 continue;
+            }
+
+            if (checkDist) {
+
+                Vec3d start = client.player.getEyePos();
+                Vec3d end = start.add(0, MAX_STEPS_RAYCAST, 0);
+
+                RaycastContext context = new RaycastContext(
+                        start,
+                        end,
+                        RaycastContext.ShapeType.OUTLINE,
+                        RaycastContext.FluidHandling.NONE,
+                        player);
+
+                BlockHitResult hit = client.world.raycast(context);
+
+                if (hit.getType() == HitResult.Type.BLOCK) {
+                    double distance = hit.getPos().distanceTo(start);
+                    steps = (int) distance;
+                } else {
+                    steps = MAX_STEPS_RAYCAST;
+                }
             }
 
             orginalPos = new Vec3d(client.player.getX(), client.player.getY(), client.player.getZ());
