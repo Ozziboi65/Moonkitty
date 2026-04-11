@@ -16,6 +16,8 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.c2s.play.HandSwingC2SPacket;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.text.Text;
@@ -36,6 +38,9 @@ public class KillAura extends Feature {
     private BooleanSetting visibleSetting;
     private BooleanSetting readySetting;
 
+    private BooleanSetting attackPlayerSetting;
+    private BooleanSetting attackHostileSetting;
+
     public float reach = 6;
 
     public int attackDelay = 200;
@@ -46,9 +51,12 @@ public class KillAura extends Feature {
     public boolean lookAtTarget = true;
     public boolean attackWhenReady;
 
+    public boolean attackPlayer;
+    public boolean attackHostile;
+
     public float[] rot;
 
-    public AbstractClientPlayerEntity currentTarget = null;
+    public Entity currentTarget = null;
 
     public KillAura() {
         this.name = "Kill Aura";
@@ -63,11 +71,17 @@ public class KillAura extends Feature {
         visibleSetting = new BooleanSetting("Check Visible", false);
         readySetting = new BooleanSetting("Attack When Ready", true);
 
+        attackPlayerSetting = new BooleanSetting("Attack Players", true);
+        attackHostileSetting = new BooleanSetting("Attack Hostile", false);
+
         addSetting(reachSetting);
         addSetting(delaySetting);
         addSetting(swingSetting);
         addSetting(visibleSetting);
         addSetting(readySetting);
+
+        addSetting(attackPlayerSetting);
+        addSetting(attackHostileSetting);
     }
 
     public void setReach(float newReach) {
@@ -134,14 +148,21 @@ public class KillAura extends Feature {
         checkVisible = visibleSetting.getValue();
         attackWhenReady = readySetting.getValue();
 
+        attackPlayer = attackPlayerSetting.getValue();
+        attackHostile = attackHostileSetting.getValue();
+
         if (!isEnabled() || client.player == null || client.world == null)
             return;
 
         currentTarget = null;
 
-        for (AbstractClientPlayerEntity player : client.world.getPlayers()) {
+        for (Entity player : client.world.getEntities()) {
 
             if (player == client.player) {
+                continue;
+            }
+
+            if (!(player instanceof PlayerEntity || player instanceof HostileEntity)) {
                 continue;
             }
 
@@ -179,7 +200,14 @@ public class KillAura extends Feature {
                 rot = getRotationForAim(client.player, player);
             }
 
-            KillAuraHud.target = player;
+            if ((player instanceof PlayerEntity)) {
+                KillAuraHud.target = (AbstractClientPlayerEntity) player;
+            }
+
+            if (!((attackHostile && player instanceof HostileEntity)
+                    || (attackPlayer && player instanceof PlayerEntity))) {
+                continue;
+            }
 
             if (attackWhenReady) {
                 float delay = client.player.getAttackCooldownProgress(0.5f);
@@ -200,7 +228,7 @@ public class KillAura extends Feature {
         }
     }
 
-    public void attackPlayer(AbstractClientPlayerEntity target) {
+    public void attackPlayer(Entity target) {
 
         if (swingHand) {
             MinecraftClient.getInstance().player.swingHand(Hand.MAIN_HAND);
@@ -211,7 +239,7 @@ public class KillAura extends Feature {
 
     }
 
-    public static float[] getRotationForAim(ClientPlayerEntity player, Entity target) {
+    public static float[] getRotationForAim(AbstractClientPlayerEntity player, Entity target) {
         double dx = target.getX() - player.getX();
         double dz = target.getZ() - player.getZ();
         double targetY = target.getY() + target.getHeight() * 0.5;// center

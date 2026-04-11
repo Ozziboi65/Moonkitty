@@ -61,7 +61,6 @@ public class KillAuraHud {
 
         public static void init() {
                 McClient = MinecraftClient.getInstance();
-                Menu menuObject = Menu.INSTANCE;
 
                 HudRenderCallback.EVENT.register(
                                 (DrawContext drawContext,
