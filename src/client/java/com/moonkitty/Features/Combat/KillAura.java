@@ -196,10 +196,6 @@ public class KillAura extends Feature {
             }
             currentTarget = player;
 
-            if (lookAtTarget) {
-                rot = getRotationForAim(client.player, player);
-            }
-
             if ((player instanceof PlayerEntity)) {
                 KillAuraHud.target = (AbstractClientPlayerEntity) player;
             }
@@ -207,6 +203,10 @@ public class KillAura extends Feature {
             if (!((attackHostile && player instanceof HostileEntity)
                     || (attackPlayer && player instanceof PlayerEntity))) {
                 continue;
+            }
+
+            if (lookAtTarget) {
+                rot = getRotationForAim(client.player, player);
             }
 
             if (attackWhenReady) {
