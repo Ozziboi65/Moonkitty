@@ -193,10 +193,11 @@ public class RenderUtil {
 
     private static void drawBoxOutlinesWorld(BufferBuilder consumer, Vec3d cam,
             List<BlockPos> positions, int color, float lineWidth) {
-        float camX = (float) cam.x, camY = (float) cam.y, camZ = (float) cam.z;
         for (int i = 0, n = positions.size(); i < n; i++) {
             BlockPos pos = positions.get(i);
-            float x0 = pos.getX() - camX, y0 = pos.getY() - camY, z0 = pos.getZ() - camZ;
+            float x0 = (float) (pos.getX() - cam.x);
+            float y0 = (float) (pos.getY() - cam.y);
+            float z0 = (float) (pos.getZ() - cam.z);
             float x1 = x0 + 1f, y1 = y0 + 1f, z1 = z0 + 1f;
             consumer.vertex(x0, y0, z0).color(color).normal(1, 0, 0).lineWidth(lineWidth);
             consumer.vertex(x1, y0, z0).color(color).normal(1, 0, 0).lineWidth(lineWidth);
@@ -227,10 +228,11 @@ public class RenderUtil {
 
     private static void drawBoxOutlinesWorld(VertexConsumer consumer, Vec3d cam,
             List<BlockPos> positions, int color, float lineWidth) {
-        float camX = (float) cam.x, camY = (float) cam.y, camZ = (float) cam.z;
         for (int i = 0, n = positions.size(); i < n; i++) {
             BlockPos pos = positions.get(i);
-            float x0 = pos.getX() - camX, y0 = pos.getY() - camY, z0 = pos.getZ() - camZ;
+            float x0 = (float) (pos.getX() - cam.x);
+            float y0 = (float) (pos.getY() - cam.y);
+            float z0 = (float) (pos.getZ() - cam.z);
             float x1 = x0 + 1f, y1 = y0 + 1f, z1 = z0 + 1f;
             consumer.vertex(x0, y0, z0).color(color).normal(1, 0, 0).lineWidth(lineWidth);
             consumer.vertex(x1, y0, z0).color(color).normal(1, 0, 0).lineWidth(lineWidth);
@@ -272,12 +274,11 @@ public class RenderUtil {
         float pzNx = nm.m20, pzNy = nm.m21, pzNz = nm.m22;
         float nzNx = -nm.m20, nzNy = -nm.m21, nzNz = -nm.m22;
         float pyNx = nm.m10, pyNy = nm.m11, pyNz = nm.m12;
-        float camX = (float) cam.x, camY = (float) cam.y, camZ = (float) cam.z;
         for (int i = 0, n = positions.size(); i < n; i++) {
             BlockPos pos = positions.get(i);
-            float lx = pos.getX() - camX;
-            float ly = pos.getY() - camY;
-            float lz = pos.getZ() - camZ;
+            float lx = (float) (pos.getX() - cam.x);
+            float ly = (float) (pos.getY() - cam.y);
+            float lz = (float) (pos.getZ() - cam.z);
             float bX = t00 * lx + t10 * ly + t20 * lz + t30;
             float bY = t01 * lx + t11 * ly + t21 * lz + t31;
             float bZ = t02 * lx + t12 * ly + t22 * lz + t32;
@@ -329,12 +330,11 @@ public class RenderUtil {
         float pzNx = nm.m20, pzNy = nm.m21, pzNz = nm.m22;
         float nzNx = -nm.m20, nzNy = -nm.m21, nzNz = -nm.m22;
         float pyNx = nm.m10, pyNy = nm.m11, pyNz = nm.m12;
-        float camX = (float) cam.x, camY = (float) cam.y, camZ = (float) cam.z;
         for (int i = 0, n = positions.size(); i < n; i++) {
             BlockPos pos = positions.get(i);
-            float lx = pos.getX() - camX;
-            float ly = pos.getY() - camY;
-            float lz = pos.getZ() - camZ;
+            float lx = (float) (pos.getX() - cam.x);
+            float ly = (float) (pos.getY() - cam.y);
+            float lz = (float) (pos.getZ() - cam.z);
             float bX = t00 * lx + t10 * ly + t20 * lz + t30;
             float bY = t01 * lx + t11 * ly + t21 * lz + t31;
             float bZ = t02 * lx + t12 * ly + t22 * lz + t32;
