@@ -57,7 +57,8 @@ public class BreakOverlay extends Feature {
 
             int color = (alpha << 24) | (r << 16) | (g << 8) | b;
 
-            RenderUtil.drawBoxOutlineCentered(consumer, entry, cam, breakingPos, breakProgress, color, 3.0f);
+            RenderUtil.drawBoxOutline(consumer, entry, cam, Vec3d.ofCenter(breakingPos), breakProgress,
+                    breakProgress, breakProgress, color, 3.0f);
 
         });
     }

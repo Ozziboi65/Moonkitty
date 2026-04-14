@@ -144,32 +144,6 @@ public class Flight extends Feature {
             z += Math.sin(yaw) * speed;
         }
 
-        if (antiKickSetting.getValue()) {
-            antiKickTimer++;
-
-            if (antiKickTimer >= 20) {
-                double akX = client.player.getX();
-                double akY = client.player.getY();
-                double akZ = client.player.getZ();
-
-                sendingAntiKickPacket = true;
-                try {
-                    client.player.networkHandler.sendPacket(
-                            new PlayerMoveC2SPacket.PositionAndOnGround(akX, akY - 0.03130D, akZ, false,
-                                    client.player.horizontalCollision));
-                    client.player.networkHandler.sendPacket(
-                            new PlayerMoveC2SPacket.PositionAndOnGround(akX, akY, akZ, false,
-                                    client.player.horizontalCollision));
-                } finally {
-                    sendingAntiKickPacket = false;
-                }
-
-                ((IClientPlayerEntityAccessor) client.player).moonkitty$setTicksSinceLastPositionPacketSent(20);
-
-                antiKickTimer = 0;
-            }
-        }
-
         client.player.setVelocity(x, targetY, z);
         client.player.fallDistance = 0;
     }

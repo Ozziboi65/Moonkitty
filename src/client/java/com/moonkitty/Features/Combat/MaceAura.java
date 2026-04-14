@@ -41,11 +41,12 @@ public class MaceAura extends Feature {
 
     public int reach = 5;
 
-    public int attackDelay = 200;
+    public int attackDelay = 150;
     long lastAttackTime = 0;
 
     private final float BLOCK_PER_STEP = 1.0f;
     private final int MAX_STEPS_RAYCAST = 9;
+    private final float FALLDMG_BYPASS_OFFSET = 0.1f;
     private int steps = 8;
 
     Vec3d orginalPos = new Vec3d(0, 0, 0);
@@ -140,7 +141,7 @@ public class MaceAura extends Feature {
                         false));
             }
 
-            for (int i = 0; i < steps - 1; i++) {
+            for (int i = 0; i < steps; i++) {
                 pos = pos.add(0, -BLOCK_PER_STEP, 0);
                 client.getNetworkHandler().sendPacket(new PlayerMoveC2SPacket.PositionAndOnGround(
                         pos,
@@ -151,6 +152,13 @@ public class MaceAura extends Feature {
             client.getNetworkHandler().sendPacket(new HandSwingC2SPacket(Hand.MAIN_HAND));
             client.getNetworkHandler().sendPacket(
                     PlayerInteractEntityC2SPacket.attack(player, client.player.isSneaking()));
+
+            client.getNetworkHandler().sendPacket(new PlayerMoveC2SPacket.PositionAndOnGround(
+                    orginalPos.x,
+                    orginalPos.y + FALLDMG_BYPASS_OFFSET,
+                    orginalPos.z,
+                    true,
+                    false));
 
             client.getNetworkHandler().sendPacket(new PlayerMoveC2SPacket.PositionAndOnGround(
                     orginalPos,
