@@ -46,14 +46,6 @@ public class MoonkittyClient implements ClientModInitializer {
                         new KeyBinding("key.moonkitty.open_gui", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_RIGHT_SHIFT,
                                         MOONKITTY_CATEGORY));
 
-        public static final KeyBinding TOGGLE_FREECAM = KeyBindingHelper.registerKeyBinding(
-                        new KeyBinding("key.moonkitty.toggleFreecam", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_G,
-                                        MoonkittyClient.MOONKITTY_CATEGORY));
-
-        public static final KeyBinding TOGGLE_BLINK = KeyBindingHelper.registerKeyBinding(
-                        new KeyBinding("key.moonkitty.blink", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_Z,
-                                        MoonkittyClient.MOONKITTY_CATEGORY));
-
         @Override
         public void onInitializeClient() {
                 LOGGER.info("Meow :3 ");

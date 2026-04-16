@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import com.moonkitty.BooleanSetting;
 import com.moonkitty.Category;
+import com.moonkitty.keybind.Keybind;
+import com.moonkitty.keybind.KeybindManager;
 import com.moonkitty.Feature;
 import com.moonkitty.NumberSetting;
 import com.moonkitty.Mixin.CameraAccessor;
@@ -88,10 +90,11 @@ public class freecam extends Feature {
         this.setCategory(Category.MOVEMENT);
         this.setEnabled(false);
 
-        // Initialize settings
         speedSetting = new NumberSetting("Speed", 0.5, 0.1, 5.0, 0.1);
         optimiseSetting = new BooleanSetting("Optimise", true);
         cancelPacketSetting = new BooleanSetting("Cancel Packets", false);
+        Keybind bind = new Keybind(this, GLFW.GLFW_KEY_G);
+        KeybindManager.registerKeybind(bind);
 
         addSetting(speedSetting);
         addSetting(optimiseSetting);
@@ -116,19 +119,9 @@ public class freecam extends Feature {
 
     @Override
     public void tick(MinecraftClient client) {
-        // Update values from settings
         speed = speedSetting.getValue().floatValue();
         optimise = optimiseSetting.getValue();
         cancelPackets = cancelPacketSetting.getValue();
-
-        if (MoonkittyClient.TOGGLE_FREECAM.wasPressed()) {
-            LOGGER.info("Toggle Free cam bind pressed");
-
-            client.inGameHud.getChatHud().addMessage(
-                    Text.literal("[MOONKITTY]Freecam Toggled With Keybind!"));
-            this.toggle();
-        }
-
     }
 
 }

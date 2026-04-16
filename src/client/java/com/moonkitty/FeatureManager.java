@@ -30,6 +30,7 @@ import com.moonkitty.Features.InventoryTweaks;
 import com.moonkitty.Features.Flight;
 import com.moonkitty.visuals.BreakOverlay;
 import com.moonkitty.Features.Visuals.Chams;
+import com.moonkitty.Features.LogoutSpot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +62,7 @@ public class FeatureManager {
     private final MaceAura maceAuraFeature;
     private final BreakOverlay breakOverlayFeature;
     private final Chams chamsFeature;
+    private final LogoutSpot logOutSpotFeature;
     MinecraftClient client;
 
     public static final FeatureManager INSTANCE = new FeatureManager();
@@ -94,6 +96,7 @@ public class FeatureManager {
         this.maceAuraFeature = new MaceAura();
         this.breakOverlayFeature = new BreakOverlay();
         this.chamsFeature = new Chams();
+        this.logOutSpotFeature = new LogoutSpot();
 
         featureList.add(espFeature);
         featureList.add(freecamFeature);
@@ -121,6 +124,7 @@ public class FeatureManager {
         featureList.add(maceAuraFeature);
         featureList.add(breakOverlayFeature);
         featureList.add(chamsFeature);
+        featureList.add(logOutSpotFeature);
     }
 
     public esp getEspFeature() {

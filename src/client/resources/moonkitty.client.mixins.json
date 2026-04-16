@@ -18,6 +18,7 @@
 		"ClientPlayerInteractionManagerAccessor",
 		"FastUseMixin",
 		"ChamsMixin",
+		"KeyboardMixin",
 		"RenderLayerAccessor",
 		"ClientPlayerEntityMixin"
 	],

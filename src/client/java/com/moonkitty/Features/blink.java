@@ -7,6 +7,9 @@ import com.moonkitty.BooleanSetting;
 import com.moonkitty.Category;
 import com.moonkitty.Feature;
 import com.moonkitty.Mixin.CameraAccessor;
+import com.moonkitty.keybind.Keybind;
+import com.moonkitty.keybind.KeybindManager;
+
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.DrawStyle;
 import net.minecraft.client.MinecraftClient;
@@ -98,6 +101,9 @@ public class blink extends Feature {
         addSetting(tickTimeSetting);
         tickCancelTimeSetting = new NumberSetting("cancel time(ticks)", 2.0, 1.0, 10.0, 1.0);
         addSetting(tickCancelTimeSetting);
+
+        Keybind bind = new Keybind(this, GLFW.GLFW_KEY_Z);
+        KeybindManager.registerKeybind(bind);
     }
 
     @Override
@@ -123,15 +129,6 @@ public class blink extends Feature {
 
     @Override
     public void tick(MinecraftClient client) {
-
-        if (MoonkittyClient.TOGGLE_BLINK.wasPressed()) {
-            LOGGER.info("Toggle Blink bind pressed");
-
-            client.inGameHud.getChatHud().addMessage(
-                    Text.literal("[MOONKITTY]Blink Toggled With Keybind!"));
-
-            this.toggle();
-        }
         tickTime = tickTimeSetting.getValue().intValue();
         tickCancelTime = tickCancelTimeSetting.getValue().intValue();
 
