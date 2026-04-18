@@ -91,7 +91,7 @@ public class Flight extends Feature {
         this.setCategory(Category.MOVEMENT);
         this.setEnabled(false);
 
-        speedSetting = new NumberSetting("Horizontal Speed", 4.0, 1.0, 14.0, 0.5);
+        speedSetting = new NumberSetting("Horizontal Speed", 4.0, 1.0, 20.0, 0.5);
         addSetting(speedSetting);
 
         verticalSpeedSetting = new NumberSetting("Vertical Speed", 1.0, 0.4, 10.0, 0.5);
