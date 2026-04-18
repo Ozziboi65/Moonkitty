@@ -3,6 +3,7 @@ package com.moonkitty;
 import net.minecraft.client.MinecraftClient;
 import java.util.ArrayList;
 import java.util.List;
+import com.moonkitty.keybind.*;
 
 public class Feature {
     public int feature_id;
@@ -13,6 +14,7 @@ public class Feature {
 
     public Feature() {
         this.category = Category.MISC;
+        addSetting(new KeybindSetting(this));
     }
 
     public Feature(String name, Category category) {

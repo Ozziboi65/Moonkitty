@@ -79,7 +79,6 @@ public class Flight extends Feature {
     private NumberSetting verticalSpeedSetting;
     private BooleanSetting antiKickSetting;
 
-    // Meteor-style anti-kick fields
     private double lastPacketY = Double.MAX_VALUE;
     private int delayLeft = 0;
     private static final int ANTI_KICK_DELAY = 20;
@@ -92,7 +91,7 @@ public class Flight extends Feature {
         this.setCategory(Category.MOVEMENT);
         this.setEnabled(false);
 
-        speedSetting = new NumberSetting("Horizontal Speed", 4.0, 1.0, 10.0, 0.5);
+        speedSetting = new NumberSetting("Horizontal Speed", 4.0, 1.0, 14.0, 0.5);
         addSetting(speedSetting);
 
         verticalSpeedSetting = new NumberSetting("Vertical Speed", 1.0, 0.4, 10.0, 0.5);
@@ -119,7 +118,7 @@ public class Flight extends Feature {
 
         double yaw = Math.toRadians(client.player.getYaw());
         double speed = 0.28 * horizontalSpeedMultiplier;
-        double x = 0, z = 0; // reset every tick
+        double x = 0, z = 0;
         targetY = 0;
 
         if (client.options.jumpKey.isPressed())

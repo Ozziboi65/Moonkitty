@@ -2,6 +2,7 @@ package com.moonkitty.config;
 
 import com.moonkitty.FeatureManager;
 import com.moonkitty.Feature;
+import com.moonkitty.KeybindSetting;
 import com.moonkitty.Setting;
 import com.moonkitty.Util.FileIO;
 
@@ -34,6 +35,12 @@ public class ConfigManager {
             featureObj.addProperty("enabled", feature.isEnabled());
 
             for (Setting<?> setting : feature.getSettings()) {
+                if (setting instanceof KeybindSetting ks) {
+                    int code = ks.getKeycode();
+                    if (code >= 0)
+                        featureObj.addProperty("bind", code);
+                    continue;
+                }
                 String settingNameSafe = setting.getName().toLowerCase().replace(" ", ".");
                 Object value = setting.getValue();
 
@@ -100,7 +107,17 @@ public class ConfigManager {
                 dirty = true;
             }
 
+            if (featureObj.has("bind")) {
+                for (Setting<?> setting : feature.getSettings()) {
+                    if (setting instanceof KeybindSetting ks) {
+                        ks.setKeycode(featureObj.get("bind").getAsInt());
+                        break;
+                    }
+                }
+            }
+
             for (Setting<?> setting : feature.getSettings()) {
+                if (setting instanceof KeybindSetting) continue;
                 String settingNameSafe = setting.getName().toLowerCase().replace(" ", ".");
 
                 if (!featureObj.has(settingNameSafe)) {

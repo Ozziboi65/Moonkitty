@@ -9,11 +9,17 @@ import com.moonkitty.ButtonSetting;
 import com.moonkitty.Category;
 import com.moonkitty.Feature;
 import com.moonkitty.FeatureManager;
+import com.moonkitty.KeybindSetting;
 import com.moonkitty.NumberSetting;
 import com.moonkitty.Setting;
 import com.moonkitty.Features.esp;
 import com.moonkitty.Features.fakeplayer;
 import com.moonkitty.Features.companion;
+import com.moonkitty.keybind.Keybind;
+import com.moonkitty.keybind.KeybindManager;
+import com.moonkitty.keybind.keybindMenu;
+import net.minecraft.client.MinecraftClient;
+import org.lwjgl.glfw.GLFW;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.gui.DrawContext;
@@ -71,16 +77,19 @@ public class ModuleWindow {
                 String moduleName = module.name != null ? module.name : module.getClass().getSimpleName();
                 ctx.drawText(tr, moduleName, x + 4, currentY + 5, textColor, false);
 
+                // bind indicator
+                String bindLabel = getShortKeyLabel(module);
+                int bindLabelX = x + WIDTH - 12 - tr.getWidth(bindLabel);
+                ctx.drawText(tr, bindLabel, bindLabelX, currentY + 5, 0xFF888888, false);
+
                 // arrow for settings
-                if (!module.getSettings().isEmpty()) {
-                    String arrow = expandedModule == module ? "v" : ">";
-                    ctx.drawText(tr, arrow, x + WIDTH - 10, currentY + 5, textColor, false);
-                }
+                String arrow = expandedModule == module ? "v" : ">";
+                ctx.drawText(tr, arrow, x + WIDTH - 10, currentY + 5, textColor, false);
 
                 currentY += ENTRY_HEIGHT;
 
                 // draw settings if expanded
-                if (expandedModule == module && !module.getSettings().isEmpty()) {
+                if (expandedModule == module) {
                     for (Setting<?> setting : module.getSettings()) {
                         ctx.fill(x + 4, currentY, x + WIDTH, currentY + SETTING_HEIGHT,
                                 ClickGui.MODULE_BG_COLOR - 0x00101010);
@@ -137,8 +146,9 @@ public class ModuleWindow {
                             ctx.fill(buttonX + buttonWidth - 1, buttonY, buttonX + buttonWidth, buttonY + buttonHeight,
                                     0xFF000000); // Right
 
-                            // Center button text
-                            String buttonText = setting.getName();
+                            String buttonText = setting instanceof KeybindSetting
+                                    ? ((KeybindSetting) setting).getButtonLabel()
+                                    : setting.getName();
                             int textWidth = tr.getWidth(buttonText);
                             int textX = buttonX + (buttonWidth - textWidth) / 2;
                             int textY = buttonY + (buttonHeight - 8) / 2;
@@ -179,15 +189,13 @@ public class ModuleWindow {
                 if (button == 0) {
                     module.toggle();
                 } else if (button == 1) {
-                    if (!module.getSettings().isEmpty()) {
-                        expandedModule = expandedModule == module ? null : module;
-                    }
+                    expandedModule = expandedModule == module ? null : module;
                 }
                 return true;
             }
             currentY += ENTRY_HEIGHT;
 
-            if (expandedModule == module && !module.getSettings().isEmpty()) {
+            if (expandedModule == module) {
                 for (Setting<?> setting : module.getSettings()) {
                     if (my >= currentY && my <= currentY + SETTING_HEIGHT) {
                         if (setting instanceof NumberSetting && button == 0) {
@@ -230,6 +238,19 @@ public class ModuleWindow {
         draggingSetting = null;
     }
 
+    private String getShortKeyLabel(Feature module) {
+        for (Keybind k : KeybindManager.getKeybindList()) {
+            if (k.getOwner() == module) {
+                int code = k.getBind();
+                String name = GLFW.glfwGetKeyName(code, 0);
+                if (name != null && !name.isEmpty())
+                    return "[" + name.toUpperCase() + "]";
+                return "[K" + code + "]";
+            }
+        }
+        return "[-]";
+    }
+
     private void handleSettingClick(Setting<?> setting, int button) {
         if (setting instanceof BooleanSetting) {
             if (button == 0) {
@@ -256,8 +277,9 @@ public class ModuleWindow {
         int height = HEADER_HEIGHT;
         for (Feature module : modules) {
             height += ENTRY_HEIGHT;
-            if (expandedModule == module && !module.getSettings().isEmpty()) {
+            if (expandedModule == module) {
                 height += module.getSettings().size() * SETTING_HEIGHT;
+                height += SETTING_HEIGHT; // bind button
             }
         }
         return height;
